@@ -11,8 +11,8 @@ pub = None
 #velocidades.data = [1 1]
 def movimiento():
     global pub, velocidades
-    velIz = 100
-    velDer = 100
+    velIz = 2
+    velDer = 2
     velocidades.data = [velIz , velDer]
     pub.publish(velocidades)
 
