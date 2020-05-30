@@ -94,7 +94,7 @@ def euclidiana(nodo, fin):
     ----------
     nodo : [Integer, Integer]
         nodo en el gridmap
-    final : [Integer, Integer]
+    fin : [Integer, Integer]
         Nodo final
     Return
     ----------
@@ -111,7 +111,7 @@ def manhattan(nodo, fin):
     ----------
     nodo : [Integer, Integer]
         nodo en el gridmap
-    final : [Integer, Integer]
+    fin : [Integer, Integer]
         Nodo final
     Return
     ----------
@@ -282,7 +282,8 @@ def get_graph(imagen):
     gridmap = cv2.imread(imagen, -1)
     # convertir celdas de las que no se tiene informacion a celdas ocupadas, ya que
     # ninguna de las dos se tendran en cuenta en la generacion del grafo
-    gridmap = np.where(gridmap == 205, 0, gridmap)
+    gridmap[(gridmap >= 179) & (gridmap <= 238)] = 0
+    gridmap[(gridmap >= 241) & (gridmap <= 255)] = 255
 
     # dilatar los obstaculos, tal que las celdas en blanco simbolicen aquellos espacios
     # libres por donde puede pasar el centro del robot. Asi se garantiza que no se acerque

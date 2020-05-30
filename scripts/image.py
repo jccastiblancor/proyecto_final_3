@@ -1,16 +1,25 @@
 #!/usr/bin/env python
 import rospy
 import cv2
-#from std_msgs.msg import Foo
 
-def click(event, x, y, flags, param): #Determina la posicion x,y de los clicks del boton izquierod del mouse y los almacena en una lista
+
+def click(event, x, y, flags, param):
+    """
+    Determina la posicion x,y de los clicks del boton izquierod del mouse y los almacena en una lista.
+    ----------
+    x : int
+        pixel en la coordenada x de la imagen
+    y : int
+        pixel en la coordenada y de la imagen
+    """
     if event == cv2.EVENT_LBUTTONDOWN:
-        refPt.append((int(x*2), int(y*2)))
+        refPt.append((int(x * 2), int(y * 2)))
+
 
 def image(imagen):
-    #pub = rospy.Publisher('coordenadas', Foo)
+    # pub = rospy.Publisher('coordenadas', Foo)
     rospy.init_node('image', anonymous=True)
-    #msg_to_send = Foo()
+    # msg_to_send = Foo()
 
     # Reading an image in default mode
     imagen = cv2.imread(imagen)
@@ -26,9 +35,9 @@ def image(imagen):
         rate.sleep()
         if len(refPt) >= 4:
             print(refPt)
-            #msg_to_send.coords = refPt
-            #pub.publish(msg_to_send)
-            #cv2.destroyWindow('Seleccione sus 4 puntos para reorganizar la vista')  # Destruye la imagen
+            # msg_to_send.coords = refPt
+            # pub.publish(msg_to_send)
+            # cv2.destroyWindow('Seleccione sus 4 puntos para reorganizar la vista')  # Destruye la imagen
             rospy.signal_shutdown('Acabo')
 
 
