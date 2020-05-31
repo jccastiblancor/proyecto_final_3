@@ -10,7 +10,7 @@ def main():
 
     navegacion = rospy.ServiceProxy('navegacion', Navegacion)
 
-    metodo = "A"
+    metodo = "d"
 
     inicio = [6.235, 6.57]
     destino = [-2.331, -6.75]

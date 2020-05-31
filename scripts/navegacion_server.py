@@ -362,8 +362,8 @@ class Ruta:
 
     def vrep_to_gridmap(self, start, end, ancho, alto):
 
-        relacionX = 15 / alto
-        relacionY = 15 / ancho
+        relacionX = float(15.0 / alto)
+        relacionY = float(15.0 / ancho)
 
         rospy.loginfo('Nodo inicio vrep "{}"'.format(start))
         rospy.loginfo('Nodo destino vrep "{}"'.format(end))
@@ -378,8 +378,8 @@ class Ruta:
 
     def gridmap_to_vrep(self, alto, ancho):
 
-        relacionX = 15 / alto
-        relacionY = 15 / ancho
+        relacionX = 15.0 / alto
+        relacionY = 15.0 / ancho
 
         direccion = None
         for nodo in self.ruta:
