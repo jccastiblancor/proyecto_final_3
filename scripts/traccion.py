@@ -1,30 +1,92 @@
 #!/usr/bin/env python3
 import rospy
 import numpy as np
-import cv2
 from std_msgs.msg import String, Int32, Float32MultiArray
-from sensor_msgs.msg import CompressedImage, Image
+from proyecto_final_3.srv import Navegacion, GridmapPoints
 
-velocidades = Float32MultiArray()
-pub = None
+x,y,theta = 0.0
 
-#velocidades.data = [1 1]
-def movimiento():
-    global pub, velocidades
-    velIz = 2
-    velDer = 2
-    velocidades.data = [velIz , velDer]
-    pub.publish(velocidades)
+def solicitarRuta():
+    """
+    main del servicio navegacion
+    """
+    rospy.init_node('nodo_test')
 
+    navegacion = rospy.ServiceProxy('navegacion', Navegacion)
+
+    metodo = "d"
+
+    inicio = [6.235, 6.57]
+    destino = [-2.331, -6.75]
+    resp = navegacion(metodo, inicio, destino)
+
+    print('rutax: "{}"'.format(resp.rutax))
+    print('rutay: "{}"'.format(resp.rutay))
+
+    inicio = [-2.331, -6.75]
+    destino = [3.366, -4.5]
+    resp = navegacion(metodo, inicio, destino)
+
+    print('rutax: "{}"'.format(resp.rutax))
+    print('rutay: "{}"'.format(resp.rutay))
+
+
+def callback_pos(param):
+    global x,y,theta
+    x=(param.linear.x)
+    y=(param.linear.y)
+    theta=(param.angular.z)
+
+def acomodar(param):
+    global theta, plot_mensaje
+    msj = Float32MultiArray()
+    pub = rospy.Publisher('/turtlebot_cmdVel', Twist, queue_size=1)
+
+    if param >0.01:
+        velIzq = 1
+        velDer = -1
+        
+    elif param < -0.01:
+		velIzq = -1
+        velDer = 1
+
+    elif param >= -0.01 and param <= 0.01:
+        velIzq = 0
+        velDer = 0
+    msj.data = [velIzq , velDer] 
+    pub.publish(msj)
+
+#PLS NO TOCAR FALTA INCORPORAR EL CAMBIO DE POSICION FINAL SEGUN LA RUTA Y CAMBIAR DE VELOCIDAD LINEAL Y ANGULAR A LAS VELOCIDADES DE CADA RUEDA
 def traccion_OP():
-    global pub
-    rospy.init_node('traccion', anonymous=True)  # Inicia el nodo teleop
-    pub = rospy.Publisher('pioneer_motorsVel', Float32MultiArray, queue_size=10)
-    rate = rospy.Rate(100)
-    while not rospy.is_shutdown():
-        movimiento()
-        rate.sleep()
+	global theta,x,y
+    velocidades = Float32MultiArray()
+    ka = 5
+    kb = -0.1
 
+    rospy.init_node('traccion', anonymous=True)
+    rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
+    pub = rospy.Publisher('pioneer_motorsVel', Float32MultiArray, queue_size=10)
+    rate = rospy.Rate(10)
+
+    while not rospy.is_shutdown():
+        error = [xf - x,yf-y]
+        rho = np.sqrt(np.power(error[0],2)+np.power(error[1],2))
+        alpha = np.arctan2(error[1],error[0])-theta
+        beta = -thetaf + theta #Falta sacar el thetaf en cada trayecto
+
+        if rho > 0.01:
+            kp = 0.8 + 1.5*np.exp(-rho)
+            v = kp*rho*np.cos(alpha)
+            w = ka*alpha+kp*np.sin(alpha)*np.cos(alpha)
+            velIzq=#algo
+            velDer=#algo
+            velocidades.data = [velIzq, velDer]
+            pub.publish(velocidades)
+            rate.sleep()
+        elif(rho<=0.01):
+            acomodar(beta)
+            rate.sleep()
 
 if __name__ == '__main__':
+    solicitarRuta()
     traccion_OP()
