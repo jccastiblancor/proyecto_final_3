@@ -5,6 +5,7 @@ import sys
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from proyecto_final_3.srv import Image
 
 """
 metodos usados en la clase minheap 
@@ -323,6 +324,14 @@ def navegacion(grafo, img, metodo, inicio, final, heuristica):
         heuristica para el algoritmo A*
     """
 
+    rospy.wait_for_service('add_two_ints')
+    try:
+        servicio = rospy.ServiceProxy('Image', Image)
+        resp1 = servicio()
+        return resp1.points
+    except rospy.ServiceException as e:
+        print("Service call failed: %s" % e)
+
     rospy.init_node('navegacion', anonymous=True)
     if metodo == 'A':
         ans, explorados = A(grafo, heuristica, inicio, final)
@@ -361,6 +370,8 @@ def navegacion(grafo, img, metodo, inicio, final, heuristica):
     rate = rospy.Rate(10)
     while not rospy.is_shutdown():
         rate.sleep()
+
+
 
 
 if __name__ == '__main__':
