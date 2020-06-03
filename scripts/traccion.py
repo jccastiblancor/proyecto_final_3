@@ -40,7 +40,7 @@ def callback_pos(param):
 def acomodar(param):
     global theta, plot_mensaje
     msj = Float32MultiArray()
-    pub = rospy.Publisher('/turtlebot_cmdVel', Twist, queue_size=1)
+    pub = rospy.Publisher('/pioneer_motorsVel', Twist, queue_size=1)
 
     if param >0.01:
         velIzq = 1
@@ -60,12 +60,14 @@ def acomodar(param):
 def traccion_OP():
 	global theta,x,y
     velocidades = Float32MultiArray()
+    R = 0.195
+    l = 0.381
     ka = 5
     kb = -0.1
 
     rospy.init_node('traccion', anonymous=True)
     rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
-    pub = rospy.Publisher('pioneer_motorsVel', Float32MultiArray, queue_size=10)
+    pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
     rate = rospy.Rate(10)
 
     while not rospy.is_shutdown():
@@ -78,8 +80,8 @@ def traccion_OP():
             kp = 0.8 + 1.5*np.exp(-rho)
             v = kp*rho*np.cos(alpha)
             w = ka*alpha+kp*np.sin(alpha)*np.cos(alpha)
-            velIzq=#algo
-            velDer=#algo
+            velIzq=w*(R - l/2)
+            velDer=w*(R + l/2)
             velocidades.data = [velIzq, velDer]
             pub.publish(velocidades)
             rate.sleep()
