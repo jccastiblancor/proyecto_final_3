@@ -1,0 +1,115 @@
+<!DOCTIPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>proyecto final grupo3</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	 crossorigin="anonymous">
+	<script type="text/javascript" src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js">
+
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/vue">
+
+	</script>
+</head>
+
+<!-- REQUIRED scripts -->
+
+<script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script src="webui.js"></script>
+
+<body class="bg-light">
+
+    <!-- Formulario -->
+    <div class="container pt-3">
+
+        <form id="frm1">
+
+            <div class="row">
+                <div class="col">
+                    <label for="NodoInicio">Coordenada inicio</label>
+                    <input type="text" class="form-control" placeholder="(6.235, 6.570, -1.57)">
+                    <small class="form-text text-muted"> ingresar de la forma (x, y, theta)</small>
+                </div>
+                <div class="col">
+                    <label for="NodoInicio">Coordenada final</label>
+                    <input type="text" class="form-control" placeholder="(-2.331, -6.750, 0.0)">
+                </div>
+                <div class="col">
+                    <label for="NodoDibujo">Coordenada dibujo</label>
+                    <input type="text" class="form-control" placeholder="(3.366, -4.5, 1.57)">
+                </div>
+            </div>
+
+            <select class="form-control">
+                <option>Dijkstra</option>
+                <option>A star</option>
+                </select>
+        </form>
+
+        <button class="btn btn-primary" onclick="publish();">Publicar</button>
+
+    </div>
+
+    <!-- Cards -->
+    <div class="container pt-3">
+
+        <div class="card-group">
+            <div class="card">
+                <div class="card-header"> <h3><b>Velocidad de cada rueda</b></h3> </div>
+                <div class="card-body">Rueda izquierda: <a id="rueda_izquierda"></a></div>
+                <div class="card-body">Rueda derecha <a id="rueda_derecha"></a> </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3> <b>Esferas encontradas</b> </h3></div>
+                <div class="card-body">Rojas: <a id="rojo"></a> <p id="rueda_derecha"></p></div>
+                <div class="card-body">Verdes: <a id="verde"></a> </div>
+                <div class="card-body">Azules: <a id="azul"></a> </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3> <b>Dibujo a realizar</b> </h3></div>
+
+                <div id='dibujo'></div>
+            </div>
+        </div>    
+
+    </div> 
+
+    <!-- Navegacion -->
+    <div class="container pt-3">
+
+        <div class="card-deck">
+            <div class="card" >
+                <div class="card-header"><h3> <b>Ruta 1</b> </h3></div>
+                <img class="card-img-top" src="../results/navegacion1.gif" alt="Card image">
+            </div>
+            <div class="card">
+                <div class="card-header"><h3> <b> Ruta 2 </b> </h3></div>
+                <img class="card-img-top" src="../results/navegacion2.gif" alt="Card image">
+            </div>
+        </div>    
+
+    </div> 
+
+    <!-- INFO -->
+    <div class="row my-4">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <h4 class="alert-heading">ROS + Bootstrap proyecto final demo</h4>
+                <ul>
+                    <li>Se muestra la informacion recolectada de los topicos</li>
+                    <li>Se muestran las rutas en el gridmap los puntos azules son las celdas exploradas, las naranjas muestran la ruta optima</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</body>
+
+</html>

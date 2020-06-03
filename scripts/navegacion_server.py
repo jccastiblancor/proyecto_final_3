@@ -37,9 +37,10 @@ class MinHeap:
 
     # ordena el min heap
     def order(self, i):
-        if not compareTo(self.heap[i], self.heap[parent(i)]):
-            self.heap[i], self.heap[parent(i)] = self.heap[parent(i)], self.heap[i]
-            self.order(parent(i))
+        if i != 0:
+            if not compareTo(self.heap[i], self.heap[parent(i)]):
+                self.heap[i], self.heap[parent(i)] = self.heap[parent(i)], self.heap[i]
+                self.order(parent(i))
 
     # Inserts a new key 'k'
     def insert(self, k, val):
@@ -129,7 +130,7 @@ class Ruta:
         """
         ans = abs(nodo[0] - self.final[0])
         ans += abs(nodo[1] - self.final[1])
-        return ans
+        return float(ans)
 
     def A(self):
         """
@@ -146,34 +147,39 @@ class Ruta:
 
         priority_queue.insert(0, [self.inicio, 0])  # agregar el nodo de inicio a la cola de prioridad
 
+        num = 0
+
         while not priority_queue.is_empty() and not end:  # recorrer hasta llegar al destino o  visitar todos los nodos
+
             obj = priority_queue.extractMin()[1]  # saca el nodo con menor costo
             nodo = obj[0]
             cn_ant = obj[1]
             ad = self.grafo[nodo]
+            explorados.append(nodo)
 
-            for i in ad:
-                adyacente = i[1]
-                if not visitados[adyacente]:
-                    explorados.append(adyacente)  # agregar nodo a la lista de exploracion
-                    visitados[adyacente] = True
-                    cn = cn_ant + 0.2  # costo de celdas  de 0.2
-                    if self.heuristica == 'm':
-                        costo = cn + self.manhattan(adyacente)
-                    else:
-                        costo = cn + self.euclidiana(adyacente)
-                    priority_queue.insert(costo, [adyacente, cn])  # agrega el nodo a la cola de prioridad
-                    anterior[adyacente] = nodo
+            if nodo == self.final:  # si llega al nodo destino recorre 'anterior' para retornar la ruta
+                end = True
+                next = nodo
 
-                    if adyacente == self.final:  # si llega al nodo destino recorre 'anterior' para retornar la ruta
-                        end = True
-                        next = adyacente
+                while next != self.inicio:
+                    self.ruta.append(next)
+                    next = anterior[next]
+                self.ruta.append(next)  # para guardar el nodo inicial
+            else:
+                for i in ad:
+                    adyacente = i[1]
+                    if not visitados[adyacente]:
+                        # explorados.append(adyacente)  # agregar nodo a la lista de exploracion
+                        visitados[adyacente] = True
+                        cn = cn_ant + 0.2  # costo de celdas  de 0.2
+                        if self.heuristica == 'm':
+                            costo = cn + self.manhattan(adyacente)
+                        else:
+                            costo = cn + self.euclidiana(adyacente)
+                        priority_queue.insert(costo, [adyacente, cn])  # agrega el nodo a la cola de prioridad
+                        anterior[adyacente] = nodo
 
-                        while next != self.inicio:
-                            self.ruta.append(next)
-                            next = anterior[next]
-                        self.ruta.append(next)  # para guardar el nodo inicial
-
+        rospy.loginfo('termino ruta')
         return explorados
 
     def dijkstra(self):

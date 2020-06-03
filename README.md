@@ -1,4 +1,11 @@
 proyecto_final_3
+# Dependencias
+
+``
+sudo apt install python-tornado python-pip ros-kinetic-rosbridge-suite ros-kinetic-web-video-server nginx
+``
+
+
 # Para correr el proyecto
 
 Correr roscore con el comando 
