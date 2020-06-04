@@ -62,39 +62,46 @@ def acomodar(param):
 def girar(param):
     kp = 0.5
     ka = 1.5 + 1*np.exp(-param)
-    giro = Twist()
-    pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
+    R = 0.195
+    l = 0.381
+
+    giro = Float32MultiArray()
+    pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
 
     w = ka*param+kp*np.sin(param)*np.cos(param)
+    velIz = (- w * l/2)/R
+    velDer = (+ w * l/2)/R
+    giro.data = [velIz, velDer]
 
-    giro.linear.x = 0
-    giro.angular.z = w
     pub.publish(giro)
 
 
 def adelantar(rho,alpha):
     kp = 1.2 + 1.5*np.exp(-rho)
-    ka = 0.7
-    adelante = Twist()
-    pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
+    ka = 1.5 + 1*np.exp(-alpha)
+    R = 0.195
+    l = 0.381
+    adelante = Float32MultiArray()
+    pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
 
     v = kp*rho*np.cos(alpha)
     w = ka*alpha+kp*np.sin(alpha)*np.cos(alpha)
 
-    adelante.angular.z = w
-    adelante.linear.x = v
+    velIz = (v - w * l/2)/R
+    velDer = (v + w * l/2)/R
+    adelante.data = [velIz, velDer]
 
     pub.publish(adelante)
 
 #PLS NO TOCAR FALTA INCORPORAR EL CAMBIO DE POSICION FINAL SEGUN LA RUTA Y CAMBIAR DE VELOCIDAD LINEAL Y ANGULAR A LAS VELOCIDADES DE CADA RUEDA
 def traccion_OP():
     global theta,x,y, hayRuta, resp
-    msj = Twist()
-    #velocidades = Float32MultiArray()
+    #msj = Twist()
+    msj = Float32MultiArray()
     rospy.init_node('traccion', anonymous=True)
     rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
-    #pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
-    pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
+    pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
+    #pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
     rate = rospy.Rate(10)
 
     while not rospy.is_shutdown():
@@ -114,8 +121,7 @@ def traccion_OP():
                         girar(alpha)
                         rate.sleep()
 
-                    msj.linear.x = 0
-                    msj.angular.z = 0
+                    msj.data = [0,0]
                     pub.publish(msj)
                     time.sleep(1)
 
@@ -129,8 +135,7 @@ def traccion_OP():
                         adelantar(rho,alpha)
                         rate.sleep()
 
-            msj.linear.x = 0
-            msj.angular.z = 0
+            msj.data = [0,0]
             pub.publish(msj)
 
         hayRuta = False
