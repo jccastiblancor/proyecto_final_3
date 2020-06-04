@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import rospy
 import numpy as np
+import time
 from std_msgs.msg import String, Int32, Float32MultiArray
 from geometry_msgs.msg import Twist
 from proyecto_final_3.srv import Navegacion, GridmapPoints
@@ -18,7 +19,7 @@ def solicitarRuta():
 
     navegacion = rospy.ServiceProxy('navegacion', Navegacion)
 
-    metodo = "d"
+    metodo = "A"
 
     inicio = [-6.23, 6.57]
     destino = [6.5, 6.5]
@@ -60,27 +61,36 @@ def acomodar(param):
 
 def girar(param):
     kp = 0.5
-    ka = 1.5
+    ka = 1.5 + 1*np.exp(-param)
     giro = Twist()
     pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
 
     w = ka*param+kp*np.sin(param)*np.cos(param)
 
+    giro.linear.x = 0
     giro.angular.z = w
     pub.publish(giro)
 
 
+def adelantar(rho,alpha):
+    kp = 1.2 + 1.5*np.exp(-rho)
+    ka = 0.7
+    adelante = Twist()
+    pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
+
+    v = kp*rho*np.cos(alpha)
+    w = ka*alpha+kp*np.sin(alpha)*np.cos(alpha)
+
+    adelante.angular.z = w
+    adelante.linear.x = v
+
+    pub.publish(adelante)
+
 #PLS NO TOCAR FALTA INCORPORAR EL CAMBIO DE POSICION FINAL SEGUN LA RUTA Y CAMBIAR DE VELOCIDAD LINEAL Y ANGULAR A LAS VELOCIDADES DE CADA RUEDA
 def traccion_OP():
-    global theta,x,y,hayRuta, resp
+    global theta,x,y, hayRuta, resp
+    msj = Twist()
     #velocidades = Float32MultiArray()
-    kp = 0.5
-    ka = 1.5
-    kb = -0.1
-    R = 0.195
-    l = 0.381
-
-
     rospy.init_node('traccion', anonymous=True)
     rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
     #pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
@@ -90,20 +100,39 @@ def traccion_OP():
     while not rospy.is_shutdown():
         if hayRuta:
             for i in range(len(resp.rutax)):
-                print(i)
-                xf = resp.rutax[i]
-                yf = resp.rutay[i]
-                rho = 100
-                alpha = 100
+            	if i !=0:
+                    print(i)
+                    xf = resp.rutax[i]
+                    yf = resp.rutay[i]
+                    rho = 100
+                    alpha = 100
 
-                while alpha > 0.01 and not rospy.is_shutdown():
-                    error = [xf - x, yf - y]
-                    alpha = np.arctan2(error[0],-error[1])-theta
-                    print(alpha, np.arctan2(error[0],-error[1]), theta)
-                    girar(alpha)
-                    rate.sleep()
+                    while (alpha > 0.05 or alpha < - 0.05) and not rospy.is_shutdown():
+                        error = [xf - x, yf - y]
+                        alpha = np.arctan2(error[1],error[0])-theta
+                        print(alpha, np.arctan2(error[1],error[0]), theta)
+                        girar(alpha)
+                        rate.sleep()
 
-                    #adelantar(xf,yf)
+                    msj.linear.x = 0
+                    msj.angular.z = 0
+                    pub.publish(msj)
+                    time.sleep(1)
+
+                    print('------------------------------')
+
+                    while (rho > 0.04) and not rospy.is_shutdown():
+                        error = [xf - x, yf - y]
+                        alpha = np.arctan2(error[1],error[0])-theta
+                        rho = np.sqrt(np.power(error[0],2)+np.power(error[1],2))
+                        print(rho, alpha, theta)
+                        adelantar(rho,alpha)
+                        rate.sleep()
+
+            msj.linear.x = 0
+            msj.angular.z = 0
+            pub.publish(msj)
+
         hayRuta = False
         rate.sleep()
 
