@@ -49,8 +49,43 @@ def callback_image_compressed(param):
     dilation_r = cv2.dilate(mejorsi_r, kernel, iterations=1)
     dilation_r2 = cv2.dilate(dilation_r, kernel, iterations=1)
     cv2.imshow("Rojo", dilation_r2)
-
     cv2.waitKey(1)
+
+
+    circulosA = encontrarCentros(dilation_a)
+    circulosV = encontrarCentros(dilation_v2)
+    circulosR = encontrarCentros(dilation_r2)
+    
+    contar = False
+    if circulosA != []:
+    	t = time.time()
+        contar = True
+    elif contar and circulosA == []:
+    	t2 = time.time()-t
+    	print (t2)
+    print (circulos)
+
+
+
+def encontrarCentros(image): #Esta funcion encuentra los centros de los circulos
+    blurred = cv2.GaussianBlur(image, (5, 5), 0)
+    mask = cv2.inRange(blurred, 5, 255) #el diametro es de 5.
+    contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Find and use the biggest contour
+    circulos=[]
+    for cnt in contours:
+        (c_x, c_y), c_r = cv2.minEnclosingCircle(cnt)
+        x = c_x
+        y = c_y
+        r = c_r
+
+        if c_r >= 65:
+            circulos.append([(round(x), round(y)), round(r)])
+            elapsed = time.time() - t
+    return circulos #Retorna la cantidad de centros que encuentra.
+
+
 
 def vision_OP():
     global pub
