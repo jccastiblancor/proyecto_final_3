@@ -57,6 +57,7 @@ def main():
     rospy.init_node('gridmap_points', anonymous=True)
     points = Points()
     s = rospy.Service('gridmap_points', GridmapPoints, points.gridmap_points)
+    print('========= Waiting for service ========')
     rospy.spin()
 
 
