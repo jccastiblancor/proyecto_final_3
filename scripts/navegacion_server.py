@@ -147,8 +147,6 @@ class Ruta:
 
         priority_queue.insert(0, [self.inicio, 0])  # agregar el nodo de inicio a la cola de prioridad
 
-        num = 0
-
         while not priority_queue.is_empty() and not end:  # recorrer hasta llegar al destino o  visitar todos los nodos
 
             obj = priority_queue.extractMin()[1]  # saca el nodo con menor costo
@@ -313,7 +311,7 @@ class Ruta:
         gridmap[(gridmap >= 179) & (gridmap <= 238)] = 0
         gridmap[(gridmap >= 241) & (gridmap <= 255)] = 255
 
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
         gridmap_dilatated = cv2.dilate(cv2.bitwise_not(gridmap), kernel, iterations=1)
         #gridmap_dilatated = cv2.dilate(cv2.bitwise_not(gridmap), kernel, iterations=1)
         gridmap_dilatated = cv2.bitwise_not(gridmap_dilatated)
