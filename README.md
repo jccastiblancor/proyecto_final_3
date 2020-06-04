@@ -11,7 +11,7 @@ sudo apt install python-tornado python-pip ros-kinetic-rosbridge-suite ros-kinet
 Correr roscore con el comando 
 
 ``
-roscore
+roslaunch rosbridge_server rosbridge_websocket.launch
 ``
 
 # Nodos
