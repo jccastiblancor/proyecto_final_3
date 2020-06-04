@@ -6,6 +6,7 @@ from geometry_msgs.msg import Twist
 from proyecto_final_3.srv import Navegacion, GridmapPoints
 
 x,y,theta = 0.0,0.0,0.0
+
 hayRuta = False
 resp = None
 
@@ -57,24 +58,67 @@ def acomodar(param):
     msj.data = [velIzq , velDer] 
     pub.publish(msj)
 
+def girar(param):
+    kp = 0.5
+    ka = 1.5
+    giro = Twist()
+    pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
+
+    w = ka*param+kp*np.sin(param)*np.cos(param)
+
+    giro.angular.z = w
+    pub.publish(giro)
+
+
 #PLS NO TOCAR FALTA INCORPORAR EL CAMBIO DE POSICION FINAL SEGUN LA RUTA Y CAMBIAR DE VELOCIDAD LINEAL Y ANGULAR A LAS VELOCIDADES DE CADA RUEDA
 def traccion_OP():
     global theta,x,y,hayRuta, resp
     #velocidades = Float32MultiArray()
-    msg = Twist()
-    R = 0.195
-    l = 0.381
+    kp = 0.5
     ka = 1.5
     kb = -0.1
+    R = 0.195
+    l = 0.381
+
 
     rospy.init_node('traccion', anonymous=True)
     rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
     #pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
     pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
     rate = rospy.Rate(10)
-    ruta = True
+
     while not rospy.is_shutdown():
         if hayRuta:
+            for i in range(len(resp.rutax)):
+                print(i)
+                xf = resp.rutax[i]
+                yf = resp.rutay[i]
+                rho = 100
+                alpha = 100
+
+                while alpha > 0.01 and not rospy.is_shutdown():
+                    error = [xf - x, yf - y]
+                    alpha = np.arctan2(error[0],-error[1])-theta
+                    print(alpha, np.arctan2(error[0],-error[1]), theta)
+                    girar(alpha)
+                    rate.sleep()
+
+                    #adelantar(xf,yf)
+        hayRuta = False
+        rate.sleep()
+
+if __name__ == '__main__':
+    solicitarRuta()
+    traccion_OP()
+
+
+
+
+
+
+
+"""
+    if hayRuta:
             for i in range(len(resp.rutax)):
                 yf = resp.rutax[i]
                 xf = resp.rutay[i]
@@ -111,8 +155,4 @@ def traccion_OP():
                         acomodar(beta)
                     rate.sleep()
             hayRuta = False
-        rate.sleep()
-
-if __name__ == '__main__':
-    solicitarRuta()
-    traccion_OP()
+"""
