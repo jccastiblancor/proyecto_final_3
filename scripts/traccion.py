@@ -85,14 +85,20 @@ def adelantar(rho, alpha):
     ka = 1.5 + 1 * np.exp(-alpha)
     R = 0.195
     l = 0.381
+
+    vmax = 1.5
     adelante = Float32MultiArray()
     pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
 
     v = kp * rho * np.cos(alpha)
     w = ka * alpha + kp * np.sin(alpha) * np.cos(alpha)
 
+    if v > vmax:
+        v = vmax
+
     velIz = (v - w * l / 2) / R
     velDer = (v + w * l / 2) / R
+
     adelante.data = [velIz, velDer]
 
     pub.publish(adelante)
@@ -129,13 +135,6 @@ def traccion_OP():
                     msj.data = [0, 0]
                     pub.publish(msj)
                     time.sleep(1)
-
-                    while (alpha > 0.01 or alpha < - 0.01) and not rospy.is_shutdown():
-                        error = [xf - x, yf - y]
-                        alpha = np.arctan2(error[1], error[0]) - theta
-                        print(alpha, np.arctan2(error[1], error[0]), theta)
-                        girar(alpha)
-                        rate.sleep()
 
                     print('------------------------------')
 
