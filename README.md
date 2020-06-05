@@ -8,11 +8,28 @@ sudo apt install python-tornado python-pip ros-kinetic-rosbridge-suite ros-kinet
 
 # Para correr el proyecto
 
-Correr roscore con el comando 
+Correr roscore y los nodos necesarios para establecer la conexion con la UI 
+con el comando: 
 
-``
+```
 roslaunch rosbridge_server rosbridge_websocket.launch
-``
+pip3 install numpy
+```
+
+Tambien debe de iniciar vrep y cargar la escena. En caso de tener un ambiente
+virtual para el proyecto este se debe de activar antes de correr los nodos.
+
+Para abrir la UI abra el archivo index.html en la carpeta src del proyecto.
+
+Luego abra cuatro terminales en las que debe correr los nodos del proyecto 
+con los siguientes comandos:
+
+```
+rosrun proyecto_final_3 navegacion_server.py 
+rosrun proyecto_final_3 gridmap_points_server.py
+rosrun proyecto_final_3 vision.py
+rosrun proyecto_final_3 traccion.py
+```
 
 # Nodos
 
