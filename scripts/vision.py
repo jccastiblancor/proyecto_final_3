@@ -33,7 +33,7 @@ def callback_image_compressed(param):
     height = int(image_np.shape[0] * scale_percent / 100) #Reshape alto
     dim = (width, height) #Nuevas Dimensiones
     resized = cv2.resize(image_np, dim) #Realizo el reshape a la imagen
-    cv2.imshow("Camara", resized) #Mostrar lo que mira la camara
+    #cv2.imshow("Camara", resized) #Mostrar lo que mira la camara
 
     #PARA MIRAR ESFERAS AZULES
     Noquiero_a=cv2.add(resized[:,:,1],resized[:,:,2])  #Informacion que no quiero observar
@@ -43,7 +43,7 @@ def callback_image_compressed(param):
     ret, mejorsi_a = cv2.threshold(Azul_1, 100, 255, cv2.THRESH_BINARY)
     kernel1 = np.ones((5, 5), np.uint8)  # El kernel utilizado
     dilation_a = cv2.dilate(mejorsi_a, kernel1, iterations=1)
-    cv2.imshow("Azul",dilation_a)
+    #cv2.imshow("Azul",dilation_a)
 
     #PARA MIRAR ESFERAS VERDES
     Noquiero_v=cv2.add(resized[:,:,0],resized[:,:,2])  #Informacion que no quiero observar
@@ -54,7 +54,7 @@ def callback_image_compressed(param):
     kernel = np.ones((5, 5), np.uint8)  # El kernel utilizado
     dilation_v = cv2.dilate(mejorsi_v, kernel, iterations=1)
     dilation_v2 = cv2.dilate(dilation_v, kernel, iterations=1)
-    cv2.imshow("Verde",dilation_v2)
+    #cv2.imshow("Verde",dilation_v2)
 
     # PARA MIRAR ESFERAS ROJO
     Noquiero_r = cv2.add(resized[:, :, 0], resized[:, :, 1])  # Informacion que no quiero observar
@@ -65,7 +65,7 @@ def callback_image_compressed(param):
     kernel = np.ones((5, 5), np.uint8)  # El kernel utilizado
     dilation_r = cv2.dilate(mejorsi_r, kernel, iterations=1)
     dilation_r2 = cv2.dilate(dilation_r, kernel, iterations=1)
-    cv2.imshow("Rojo", dilation_r2)
+    #cv2.imshow("Rojo", dilation_r2)
     cv2.waitKey(1)
 
 
@@ -101,7 +101,7 @@ def callback_image_compressed(param):
         t2R = time.time()-tR
         contoR=True
         contarR=False
-    if contoA==True and t2R>0:
+    if contoR==True and t2R>0:
         tR=0
         t2R=0
         contoR=False
@@ -141,7 +141,7 @@ def encontrarCentros(image): #Esta funcion encuentra los centros de los circulos
         y = c_y
         r = c_r
 
-        if c_r >= 66:
+        if c_r >= 64:
             circulos.append([(round(x), round(y)), round(r)])
     return circulos #Retorna la cantidad de centros que encuentra.
 
