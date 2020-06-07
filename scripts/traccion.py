@@ -10,9 +10,10 @@ x, y, theta = 0.0, 0.0, 0.0
 
 hayRuta = False
 resp = None
+pintar = None
 
 
-def solicitarRuta():
+def solicitarRuta(inicio, destino, algoritmo='A star'):
     """
     main del servicio navegacion
     """
@@ -20,10 +21,10 @@ def solicitarRuta():
 
     navegacion = rospy.ServiceProxy('navegacion', Navegacion)
 
-    metodo = "A"
-
-    inicio = [-6.23, 6.57]
-    destino = [6.5, 6.5]
+    if algoritmo == 'Dijkstra':
+        metodo = "d"
+    else:
+        metodo = "A"
 
     x = inicio[0]
     y = inicio[1]
@@ -69,10 +70,16 @@ def girar(param):
     R = 0.195
     l = 0.381
 
+    w_max = 1
+
     giro = Float32MultiArray()
     pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
 
     w = ka * param + kp * np.sin(param) * np.cos(param)
+    print(w)
+
+    if w > w_max:
+        w = w_max
     velIz = (- w * l / 2) / R
     velDer = (+ w * l / 2) / R
     giro.data = [velIz, velDer]
@@ -104,16 +111,42 @@ def adelantar(rho, alpha):
     pub.publish(adelante)
 
 
+def inicio(param):
+    global pintar
+    mensaje = param.data
+
+    mensaje = mensaje.replace('(', '')
+    mensaje = mensaje.replace(')', '')
+
+    info = mensaje.split(' ; ')
+
+    nodo_data = info[0].split(',')
+    print(nodo_data)
+    info[0] = [float(nodo_data[0]), float(nodo_data[1])]
+
+    nodo_data = info[1].split(',')
+    info[1] = [float(nodo_data[0]), float(nodo_data[1])]
+
+    nodo_data = info[2].split(',')
+    info[2] = [float(nodo_data[0]), float(nodo_data[1])]
+    pintar = info[2]
+
+    solicitarRuta(info[0], info[1], info[3])
+
+
 # PLS NO TOCAR FALTA INCORPORAR EL CAMBIO DE POSICION FINAL SEGUN LA RUTA Y CAMBIAR DE VELOCIDAD LINEAL Y ANGULAR A LAS VELOCIDADES DE CADA RUEDA
 def traccion_OP():
-    global theta, x, y, hayRuta, resp
+    global theta, x, y, hayRuta, resp, pintar
     # msj = Twist()
     msj = Float32MultiArray()
     rospy.init_node('traccion', anonymous=True)
+    rospy.Subscriber('/start', String, inicio, queue_size=1)
     rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
     pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
     # pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
     rate = rospy.Rate(10)
+
+    pintar = True
 
     while not rospy.is_shutdown():
         if hayRuta:
@@ -148,51 +181,12 @@ def traccion_OP():
 
             msj.data = [0, 0]
             pub.publish(msj)
-
-        hayRuta = False
-        rate.sleep()
+            hayRuta = False
+            if pintar:
+                solicitarRuta([x, y], pintar)
+                pintar = False
+            rate.sleep()
 
 
 if __name__ == '__main__':
-    solicitarRuta()
     traccion_OP()
-
-"""
-    if hayRuta:
-            for i in range(len(resp.rutax)):
-                yf = resp.rutax[i]
-                xf = resp.rutay[i]
-                thetaf = 0
-
-                error = [yf - x, xf - y]
-                rho = np.sqrt(np.power(error[0],2)+np.power(error[1],2))
-                alpha = np.arctan2(error[1],error[0])-theta
-                beta = -thetaf + theta
-                print(i)
-
-                while (rho > 0.05 or (beta <= -0.05 and beta >= 0.05)) and not rospy.is_shutdown():
-                    print(xf, x, yf, y)
-                    error = [yf - x, xf - y]
-                    rho = np.sqrt(np.power(error[0],2)+np.power(error[1],2))
-                    print(rho)
-                    alpha = np.arctan2(error[1],error[0])-theta
-                    print(alpha)
-                    beta = -thetaf + theta #Falta sacar el thetaf en cada trayecto
-
-                    if rho > 0.05:
-                        kp = 0.9 +  1.5*np.exp(-rho)
-                        v = kp*rho*np.cos(alpha)
-                        w = ka*alpha+kp*np.sin(alpha)*np.cos(alpha)
-                        msg.linear.x = v
-                        msg.angular.z = w
-                        pub.publish(msg)
-                        #velIzq=w*(R - l/2)
-                        #velDer=w*(R + l/2)
-                        #velocidades.data = [velIzq, velDer]
-                        #pub.publish(velocidades)
-
-                    elif(rho<=0.05):
-                        acomodar(beta)
-                    rate.sleep()
-            hayRuta = False
-"""

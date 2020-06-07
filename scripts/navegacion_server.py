@@ -311,9 +311,8 @@ class Ruta:
         gridmap[(gridmap >= 179) & (gridmap <= 238)] = 0
         gridmap[(gridmap >= 241) & (gridmap <= 255)] = 255
 
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
         gridmap_dilatated = cv2.dilate(cv2.bitwise_not(gridmap), kernel, iterations=1)
-        #gridmap_dilatated = cv2.dilate(cv2.bitwise_not(gridmap), kernel, iterations=1)
         gridmap_dilatated = cv2.bitwise_not(gridmap_dilatated)
 
 
@@ -395,13 +394,13 @@ class Ruta:
             else:
                 if nodo[0] == anterior[0]:
                     if direccion != 'x':
-                        x.append(anterior[0] * relacionX - 7.5 + relacionX/2)
-                        y.append(anterior[1] * relacionY - 7.5 + relacionY/2)
+                        x.append(anterior[0] * relacionX - 7.5)
+                        y.append(anterior[1] * relacionY - 7.5)
                     direccion = 'x'
                 elif nodo[1] == anterior[1]:
                     if direccion != 'y':
-                        x.append(anterior[0] * relacionX - 7.5 + relacionX/2)
-                        y.append(anterior[1] * relacionY - 7.5 + relacionY/2)
+                        x.append(anterior[0] * relacionX - 7.5)
+                        y.append(anterior[1] * relacionY - 7.5)
                     direccion = 'y'
             anterior = nodo
         x.append(self.inicio[0] * relacionX - 7.5)

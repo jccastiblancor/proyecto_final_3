@@ -6,9 +6,9 @@ var subscriptor;
 var publisher;
 var msj;
 
-var rojo = 1;
-var verde = 2;
-var azul = 3;
+var rojo = 0;
+var verde = 0;
+var azul = 0;
 
 var derecha = 0;
 var izquierda = 0;
@@ -54,8 +54,8 @@ function iniciar(){
 
     this.subscriptorMovimiento = new ROSLIB.Topic({
         ros: ros,
-        name: '/chatter',
-        // messageType: 'geometry_msgs/Twist'
+        name: '/pioneer_motorsVel',
+        messageType: 'std_msgs/Float32MultiArray'
     })
 
     this.subscriptorColores = new ROSLIB.Topic({
@@ -107,34 +107,57 @@ function mostrar_dibujo(bono){
 }
 
 
+function refresh(node)
+{
+   var times = 1000; // gap in Milli Seconds;
+
+   (function startRefresh()
+   {
+      var address;
+      if(node.src.indexOf('?')>-1)
+       address = node.src.split('?')[0];
+      else 
+       address = node.src;
+      node.src = address+"?time="+new Date().getTime();
+
+      setTimeout(startRefresh,times);
+   })();
+
+}
+
 
 window.onload = function () {
 
     this.iniciar()
+
+    var node = document.getElementById('dibujo');
+    refresh(node);
 
     // ----------------------------
     // Usar listener.
     // ----------------------------    
 
     subscriptorMovimiento.subscribe(function(message){
-        console.log('Info del mensaje: \n', message.data);
-        msj = message.data
+        //console.log('Info del mensaje ruedas: \n', message.data);
 
-        //derecha = message.linear
-        //izquierda = message.linear
+        derecha = message.data[1].toFixed(2)
+        izquierda = message.data[0].toFixed(2)
 
-        document.getElementById("rueda_derecha").innerHTML=String(this.derecha);
-        document.getElementById("rueda_izquierda").innerHTML=String(this.izquierda);
+        //console.log('derecha: \n', derecha);
+        //console.log('izquierda: \n', izquierda);
+
+        document.getElementById("rueda_derecha").innerHTML=String(derecha);
+        document.getElementById("rueda_izquierda").innerHTML=String(izquierda);
+
+        document.getElementById("rojo").innerHTML=String(derecha);
+        document.getElementById("verde").innerHTML=String(izquierda);
     })
 
-    subscriptorMovimiento.subscribe(function(message){
+    subscriptorColores.subscribe(function(message){
         console.log('Info del mensaje: \n', message.data);
         rojo = message.data[0]
         verde = message.data[1]
         azul = message.data[2]
-
-        //derecha = message.linear
-        //izquierda = message.linear
 
         document.getElementById("rojo").innerHTML=String(rojo);
         document.getElementById("verde").innerHTML=String(verde);
