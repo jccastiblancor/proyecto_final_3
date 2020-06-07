@@ -121,7 +121,6 @@ def inicio(param):
     info = mensaje.split(' ; ')
 
     nodo_data = info[0].split(',')
-    print(nodo_data)
     info[0] = [float(nodo_data[0]), float(nodo_data[1])]
 
     nodo_data = info[1].split(',')

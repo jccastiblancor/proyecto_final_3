@@ -14,6 +14,10 @@ var derecha = 0;
 var izquierda = 0;
 
 
+function refrescar(){
+    location.reload();
+}
+
 function publish() {
     console.log('publicando')
 
@@ -26,7 +30,7 @@ function publish() {
     publisher.data = text
     console.log(publisher.data)
     cmdStart.publish(publisher);
-    location.reload();
+    setTimeout(refrescar, 2000);  
 }
 
 function iniciar(){
