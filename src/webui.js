@@ -26,6 +26,7 @@ function publish() {
     publisher.data = text
     console.log(publisher.data)
     cmdStart.publish(publisher);
+    location.reload();
 }
 
 function iniciar(){
@@ -92,8 +93,11 @@ function iniciar(){
 
 function mostrar_dibujo(bono){
 
+    console.log('DIBUJO');
+    console.log(rojo, verde, azul);
+
     if(bono){
-        document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/bono.png' alt='Card image'>";
+        document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/bono.png?' + new Date().getTime()  alt='Card image'>";
     } else if (this.rojo > this.verde && this.rojo > this.azul){
         document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/pez.png' alt='Card image'>";
     }else if (this.rojo < this.verde && this.verde > this.azul){
@@ -104,25 +108,7 @@ function mostrar_dibujo(bono){
         document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/jirafa.png' alt='Card image'>";
     }
 
-}
-
-
-function refresh(node)
-{
-   var times = 1000; // gap in Milli Seconds;
-
-   (function startRefresh()
-   {
-      var address;
-      if(node.src.indexOf('?')>-1)
-       address = node.src.split('?')[0];
-      else 
-       address = node.src;
-      node.src = address+"?time="+new Date().getTime();
-
-      setTimeout(startRefresh,times);
-   })();
-
+    setTimeout(mostrar_dibujo, 1000);
 }
 
 
@@ -130,8 +116,7 @@ window.onload = function () {
 
     this.iniciar()
 
-    var node = document.getElementById('dibujo');
-    refresh(node);
+    // this.updateImage()
 
     // ----------------------------
     // Usar listener.
@@ -145,12 +130,16 @@ window.onload = function () {
 
         //console.log('derecha: \n', derecha);
         //console.log('izquierda: \n', izquierda);
+        rojo = derecha
+        verde = izquierda
 
         document.getElementById("rueda_derecha").innerHTML=String(derecha);
         document.getElementById("rueda_izquierda").innerHTML=String(izquierda);
 
         document.getElementById("rojo").innerHTML=String(derecha);
         document.getElementById("verde").innerHTML=String(izquierda);
+
+        
     })
 
     subscriptorColores.subscribe(function(message){
@@ -163,7 +152,7 @@ window.onload = function () {
         document.getElementById("verde").innerHTML=String(verde);
         document.getElementById("azul").innerHTML=String(azul);
     })
-
+    
       
 
 }
