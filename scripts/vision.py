@@ -4,10 +4,27 @@ import numpy as np
 import cv2
 from std_msgs.msg import String, Int32, Float32MultiArray
 from sensor_msgs.msg import CompressedImage, Image
-
-
-
+import time
+contar=False
+contador=0
+t=0
+t2=0
+contoA=False
+contoV=False
+contoR=False
+contarR=False
+contadorR=0
+tR=0
+t2R=0
+contarV=False
+contadorV=0
+tV=0
+t2V=0
+vamosA=0
+vamosV=0
+vamosR=0
 def callback_image_compressed(param):
+    global contar, contador, t, t2, contarR, contadorR, tR, t2R, contarV, contadorV, tV, t2V, contoA, vamosA, vamosV,vamosR,contoR,contoV
     np_arr = np.fromstring(param.data, np.uint8) #Pasar de String que viene a uint8
 
     image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR) #Lo pasa a RGB
@@ -55,15 +72,59 @@ def callback_image_compressed(param):
     circulosA = encontrarCentros(dilation_a)
     circulosV = encontrarCentros(dilation_v2)
     circulosR = encontrarCentros(dilation_r2)
-    
-    contar = False
+
+    #TIEMPO CIRCULOS AZULES
     if circulosA != []:
-    	t = time.time()
-        contar = True
-    elif contar and circulosA == []:
-    	t2 = time.time()-t
-    	print (t2)
-    print (circulos)
+       if contar ==False and contador<1: #Apenas vio una esfera azul
+            t = time.time()
+            contador=1
+       contar = True
+
+    if contar==True and circulosA == [] and contoA==False:
+        t2 = time.time()-t
+        contoA=True
+        contar=False
+    if contoA==True and t2>0:
+        t=0
+        t2=0
+        contoA=False
+        vamosA=1+vamosA
+
+    #TIEMPO CIRCULOS ROJO
+    if circulosR != []:
+       if contarR ==False and contadorR<1:
+            tR = time.time()
+            contadorR=1
+       contarR = True
+
+    if contarR==True and circulosR == [] and contoR==False:
+        t2R = time.time()-tR
+        contoR=True
+        contarR=False
+    if contoA==True and t2R>0:
+        tR=0
+        t2R=0
+        contoR=False
+        vamosR=1+vamosR
+
+    #TIEMPO CIRCULOS VERDE
+    if circulosV != []:
+       if contarV ==False and contadorV<1:
+            tV = time.time()
+            contadorV=1
+       contarV = True
+
+    if contarV==True and circulosV == [] and contoV==False:
+        t2V = time.time()-tV
+        contoV=True
+        contarV=False
+    if contoV==True and t2V>0:
+        tV=0
+        t2V=0
+        contoV=False
+        vamosV=1+vamosV
+
+    print (vamosA,vamosV,vamosR)
 
 
 
@@ -80,9 +141,8 @@ def encontrarCentros(image): #Esta funcion encuentra los centros de los circulos
         y = c_y
         r = c_r
 
-        if c_r >= 65:
+        if c_r >= 66:
             circulos.append([(round(x), round(y)), round(r)])
-            elapsed = time.time() - t
     return circulos #Retorna la cantidad de centros que encuentra.
 
 
