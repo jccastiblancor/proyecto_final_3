@@ -123,7 +123,7 @@ def callback_image_compressed(param):
         t2V=0
         contoV=False
         vamosV=1+vamosV
-
+    print(circulosA,circulosV,circulosR)
     print (vamosA,vamosV,vamosR)
 
 
