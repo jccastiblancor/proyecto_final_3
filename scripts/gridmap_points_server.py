@@ -44,7 +44,9 @@ class Points:
             cv2.waitKey(10)
             cv2.setMouseCallback('gridmap', self.click)
 
-        cv2.destroyWindow('gridmap')  # Destruye la imagen
+            if self.i == 4:
+                cv2.destroyWindow('gridmap')  # Destruye la imagen
+                
         response = GridmapPointsResponse()
         response.points = self.points
         return response

@@ -12,7 +12,14 @@ var azul = 0;
 
 var derecha = 0;
 var izquierda = 0;
+var slide = "slide_down"
+var angulo = -135
+var orientacion = 0
 
+
+function refrescar(){
+    location.reload();
+}
 
 function publish() {
     console.log('publicando')
@@ -26,6 +33,7 @@ function publish() {
     publisher.data = text
     console.log(publisher.data)
     cmdStart.publish(publisher);
+    setTimeout(refrescar, 2000);  
 }
 
 function iniciar(){
@@ -58,6 +66,12 @@ function iniciar(){
         messageType: 'std_msgs/Float32MultiArray'
     })
 
+    this.subscriptorPosicion = new ROSLIB.Topic({
+        ros: ros,
+        name: '/pioneer_position',
+        messageType: 'geometry_msgs/Twist'
+    })
+
     this.subscriptorColores = new ROSLIB.Topic({
         ros: ros,
         name: '/colores',
@@ -86,14 +100,58 @@ function iniciar(){
     document.getElementById("azul").innerHTML=String(azul);
     document.getElementById("rueda_derecha").innerHTML=String(this.derecha);
     document.getElementById("rueda_izquierda").innerHTML=String(this.izquierda);
+    document.getElementById("orientacion").innerHTML=String(this.orientacion);
 
-    mostrar_dibujo(false)
+    refrescar(false)
 }
 
-function mostrar_dibujo(bono){
+function arrows_direction(p_slide){
+    for (let i = 0; i < 4; i++) {
+
+        var element = document.getElementById('flecha' + i);
+        if(p_slide=='slide_der'){
+            if (i==0){
+                element.className = 'arrowSliding_der';
+            } else{
+                element.className = 'arrowSliding_der delay' + i;
+            }
+            
+        }else if(p_slide=='slide_up'){
+            if (i==0){
+                element.className = 'arrowSliding_up';
+            } else{
+                element.className = 'arrowSliding_up delay' + i;
+            }
+        }else if(p_slide=='slide_down'){
+            if (i==0){
+                element.className = 'arrowSliding_down';
+            } else{
+                element.className = 'arrowSliding_down delay' + i;
+            }
+        }else{
+            if (i==0){
+                element.className = 'arrowSliding';
+            } else{
+                element.className = 'arrowSliding delay' + i;
+            }
+        }
+    } 
+    var element = document.getElementById('animate');
+    
+
+}
+
+function refrescar(bono){
+
+    let myElements = document.querySelectorAll(".arrow");
+    for (let i = 0; i < myElements.length; i++) {
+        myElements[i].style.transform = `rotate(${angulo}deg)`;
+    }
+
+    arrows_direction(slide)
 
     if(bono){
-        document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/bono.png' alt='Card image'>";
+        document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/bono.png?' + new Date().getTime()  alt='Card image'>";
     } else if (this.rojo > this.verde && this.rojo > this.azul){
         document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/pez.png' alt='Card image'>";
     }else if (this.rojo < this.verde && this.verde > this.azul){
@@ -104,25 +162,7 @@ function mostrar_dibujo(bono){
         document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/jirafa.png' alt='Card image'>";
     }
 
-}
-
-
-function refresh(node)
-{
-   var times = 1000; // gap in Milli Seconds;
-
-   (function startRefresh()
-   {
-      var address;
-      if(node.src.indexOf('?')>-1)
-       address = node.src.split('?')[0];
-      else 
-       address = node.src;
-      node.src = address+"?time="+new Date().getTime();
-
-      setTimeout(startRefresh,times);
-   })();
-
+    setTimeout(refrescar, 1000);
 }
 
 
@@ -130,8 +170,7 @@ window.onload = function () {
 
     this.iniciar()
 
-    var node = document.getElementById('dibujo');
-    refresh(node);
+    // this.updateImage()
 
     // ----------------------------
     // Usar listener.
@@ -145,12 +184,37 @@ window.onload = function () {
 
         //console.log('derecha: \n', derecha);
         //console.log('izquierda: \n', izquierda);
+        rojo = derecha
+        verde = izquierda
 
         document.getElementById("rueda_derecha").innerHTML=String(derecha);
         document.getElementById("rueda_izquierda").innerHTML=String(izquierda);
 
         document.getElementById("rojo").innerHTML=String(derecha);
         document.getElementById("verde").innerHTML=String(izquierda);
+
+        
+    })
+
+    subscriptorPosicion.subscribe(function(message){
+        //console.log('Info del mensaje ruedas: \n', message.data);
+
+        orientacion = message.angular.z
+        if (orientacion <0.78 && orientacion>-0.78){
+            angulo = -135
+            slide = "slide_down"
+        } else if (orientacion >0.78 && orientacion<2.35){
+            angulo = 135
+            slide = "slide_der"
+        } else if (orientacion <-0.78 && orientacion>-2.35){
+            angulo = -45
+            slide = "slide"
+        } else {
+            angulo = 45
+            slide = "slide_up"
+        }
+
+        document.getElementById("orientacion").innerHTML=String((orientacion*180/3.14).toFixed(2));   
     })
 
     subscriptorColores.subscribe(function(message){
@@ -163,7 +227,7 @@ window.onload = function () {
         document.getElementById("verde").innerHTML=String(verde);
         document.getElementById("azul").innerHTML=String(azul);
     })
-
+    
       
 
 }

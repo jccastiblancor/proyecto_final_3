@@ -39,6 +39,7 @@
                 <div class="col">
                     <label for="NodoInicio">Coordenada final</label>
                     <input type="text" class="form-control" placeholder="(-2.331, -6.750, 0.0)">
+                    <small class="form-text text-muted"> (-6.23, 6.57, -1.57) (6.5, 6.5, 0.0) (3.366, -4.5, 1.57)</small>
                 </div>
                 <div class="col">
                     <label for="NodoDibujo">Coordenada dibujo</label>
@@ -67,7 +68,7 @@
             </div>
             <div class="card">
                 <div class="card-header"><h3> <b>Esferas encontradas</b> </h3></div>
-                <div class="card-body">Rojas: <a id="rojo"></a> <p id="rueda_derecha"></p></div>
+                <div class="card-body">Rojas: <a id="rojo"></a> </div>
                 <div class="card-body">Verdes: <a id="verde"></a> </div>
                 <div class="card-body">Azules: <a id="azul"></a> </div>
             </div>
@@ -85,12 +86,30 @@
 
         <div class="card-deck">
             <div class="card" >
-                <div class="card-header"><h3> <b>Ruta 1</b> </h3></div>
-                <img class="card-img-top" src="../results/navegacion.gif" alt="Card image">
+                <div class="card-header"><h3> <b>Ruta</b> </h3></div>
+                <img class="card-img-top" src="../results/navegacion.gif#" + new Date().getTime() alt="Card image">
             </div>
             <div class="card">
-                <div class="card-header"><h3> <b> Ruta 2 </b> </h3></div>
-                <img class="card-img-top" src="../results/navegacion2.gif" alt="Card image">
+                <div class="card-header"><h3> <b>Direccion de movimiento</b> </h3></div>
+                <div class="container">
+                <div id="arrowAnim">
+                    <div class="arrowSliding" id="flecha0" >
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="arrowSliding delay1" id="flecha1">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="arrowSliding delay2" id="flecha2">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="arrowSliding delay3" id="flecha3">
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                </div>
+                <div class="card-footer text-muted">
+                    orientacion:  <a id="orientacion"></a> grados
+                </div>
             </div>
         </div>    
 
