@@ -5,6 +5,7 @@ import cv2
 from std_msgs.msg import String, Int32, Float32MultiArray
 from sensor_msgs.msg import CompressedImage, Image
 import time
+from geometry_msgs.msg import Twist
 contar=False
 contador=0
 t=0
@@ -23,10 +24,33 @@ t2V=0
 vamosA=0
 vamosV=0
 vamosR=0
+x1=0
+y1=0
+x2=0
+y2=0
+DifAx=0
+DifAy=0
+x1V=0
+y1V=0
+x2V=0
+y2V=0
+DifVx=0
+DifVy=0
+x1R=0
+y1R=0
+x2R=0
+y2R=0
+DifRx=0
+DifRy=0
+x=0
+y=0
+numero=0
+numeroA=0
+numeroR=0
 def callback_image_compressed(param):
-    global contar, contador, t, t2, contarR, contadorR, tR, t2R, contarV, contadorV, tV, t2V, contoA, vamosA, vamosV,vamosR,contoR,contoV
+    global numeroA,numero,numeroR,x,y,contar, contador, t, t2, contarR, contadorR, tR, t2R, contarV, contadorV, tV, t2V, contoA, vamosA, vamosV,vamosR,contoR,contoV, x1, x2, y1, y2, DifAx, DifAy, x1V, x2V, y1V, y2V, DifVx, DifVy,x1R, x2R, y1R, y2R, DifRx, DifRy
     np_arr = np.fromstring(param.data, np.uint8) #Pasar de String que viene a uint8
-
+    msj = Float32MultiArray()
     image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR) #Lo pasa a RGB
     scale_percent = 1200  # percent of original size
     width = int(image_np.shape[1] * scale_percent / 100) #Reshape ancho
@@ -68,16 +92,17 @@ def callback_image_compressed(param):
     #cv2.imshow("Rojo", dilation_r2)
     cv2.waitKey(1)
 
-
+    rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
     circulosA = encontrarCentros(dilation_a)
     circulosV = encontrarCentros(dilation_v2)
     circulosR = encontrarCentros(dilation_r2)
-
     #TIEMPO CIRCULOS AZULES
     if circulosA != []:
        if contar ==False and contador<1: #Apenas vio una esfera azul
             t = time.time()
             contador=1
+            x1=x
+            y1=y
        contar = True
 
     if contar==True and circulosA == [] and contoA==False:
@@ -85,16 +110,40 @@ def callback_image_compressed(param):
         contoA=True
         contar=False
     if contoA==True and t2>0:
+        x2=x
+        y2=y
+        DifAx = abs(x2 - x1)
+        DifAy = abs(y2 - y1)
+        if DifAx > DifAy:
+            numeroA = DifAx
+        else:
+            numeroA = DifAy
+    if numeroA>1 and contoA==True:
+        vamosA = 1 + vamosA
+        time.sleep(2)
         t=0
         t2=0
+        x1=0
+        x2=0
+        y2=0
+        y1=0
+        DifAx=0
+        DifAy=0
         contoA=False
-        vamosA=1+vamosA
+        contador=0
+        numeroA=0
+            #print('Supuesto',vamosA,DifAx,DifAy)
+
+
+
 
     #TIEMPO CIRCULOS ROJO
     if circulosR != []:
        if contarR ==False and contadorR<1:
             tR = time.time()
             contadorR=1
+            x1R = x
+            y1R = y
        contarR = True
 
     if contarR==True and circulosR == [] and contoR==False:
@@ -102,16 +151,38 @@ def callback_image_compressed(param):
         contoR=True
         contarR=False
     if contoR==True and t2R>0:
+        x2R = x
+        y2R = y
+        DifRx = abs(x2R - x1R)
+        DifRy = abs(y2R - y1R)
+        if DifRx > DifRy:
+            numeroR = DifRx
+        else:
+            numeroR = DifRy
+    if numeroR>1 and contoR==True:
+        vamosR = 1 + vamosR
+        time.sleep(2)
         tR=0
         t2R=0
+        x1R = 0
+        x2R = 0
+        y2R = 0
+        y1R = 0
+        DifRx=0
+        DifRy=0
+        contadorR=0
         contoR=False
-        vamosR=1+vamosR
+        numeroR=0
+
+
 
     #TIEMPO CIRCULOS VERDE
     if circulosV != []:
        if contarV ==False and contadorV<1:
             tV = time.time()
             contadorV=1
+            x1V = x
+            y1V = y
        contarV = True
 
     if contarV==True and circulosV == [] and contoV==False:
@@ -119,13 +190,36 @@ def callback_image_compressed(param):
         contoV=True
         contarV=False
     if contoV==True and t2V>0:
+        x2V = x
+        y2V = y
+        DifVx = abs(x2V - x1V)
+        DifVy = abs(y2V - y1V)
+        if DifVx>DifVy:
+            numero=DifVx
+        else:
+            numero=DifVy
+    if numero > 1 and contoV==True:
+        vamosV = 1 + vamosV
+        time.sleep(2)
         tV=0
         t2V=0
+        x1V = 0
+        x2V = 0
+        y2V = 0
+        y1V = 0
+        DifVx = 0
+        DifVy = 0
+        contadorV=0
         contoV=False
-        vamosV=1+vamosV
-    print(circulosA,circulosV,circulosR)
-    print (vamosA,vamosV,vamosR)
+        numero=0
 
+
+    print(circulosA,circulosV,circulosR)
+    print (vamosA/2,vamosV/2,vamosR/2)
+    print(DifAx,DifAy,DifVy,DifVx,DifRx,DifRy)
+    pub = rospy.Publisher('/cantidad_Bolas', Float32MultiArray, queue_size=10)
+    msj.data = [vamosA/2,vamosV/2,vamosR/2]
+    pub.publish(msj)
 
 
 def encontrarCentros(image): #Esta funcion encuentra los centros de los circulos
@@ -141,10 +235,14 @@ def encontrarCentros(image): #Esta funcion encuentra los centros de los circulos
         y = c_y
         r = c_r
 
-        if c_r >= 62:
+        if c_r >= 64:
             circulos.append([(round(x), round(y)), round(r)])
     return circulos #Retorna la cantidad de centros que encuentra.
 
+def callback_pos(param):
+    global x, y
+    x = (param.linear.x)
+    y = (param.linear.y)
 
 
 def vision_OP():
