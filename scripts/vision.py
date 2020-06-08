@@ -141,7 +141,7 @@ def encontrarCentros(image): #Esta funcion encuentra los centros de los circulos
         y = c_y
         r = c_r
 
-        if c_r >= 64:
+        if c_r >= 62:
             circulos.append([(round(x), round(y)), round(r)])
     return circulos #Retorna la cantidad de centros que encuentra.
 
