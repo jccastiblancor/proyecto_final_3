@@ -12,6 +12,9 @@ var azul = 0;
 
 var derecha = 0;
 var izquierda = 0;
+var slide = "slide_down"
+var angulo = -135
+var orientacion = 0
 
 
 function refrescar(){
@@ -91,14 +94,55 @@ function iniciar(){
     document.getElementById("azul").innerHTML=String(azul);
     document.getElementById("rueda_derecha").innerHTML=String(this.derecha);
     document.getElementById("rueda_izquierda").innerHTML=String(this.izquierda);
+    document.getElementById("orientacion").innerHTML=String(this.orientacion);
 
-    mostrar_dibujo(false)
+    refrescar(false)
 }
 
-function mostrar_dibujo(bono){
+function arrows_direction(p_slide){
+    for (let i = 0; i < 4; i++) {
 
-    console.log('DIBUJO');
-    console.log(rojo, verde, azul);
+        var element = document.getElementById('flecha' + i);
+        if(p_slide=='slide_der'){
+            if (i==0){
+                element.className = 'arrowSliding_der';
+            } else{
+                element.className = 'arrowSliding_der delay' + i;
+            }
+            
+        }else if(p_slide=='slide_up'){
+            if (i==0){
+                element.className = 'arrowSliding_up';
+            } else{
+                element.className = 'arrowSliding_up delay' + i;
+            }
+        }else if(p_slide=='slide_down'){
+            if (i==0){
+                element.className = 'arrowSliding_down';
+            } else{
+                element.className = 'arrowSliding_down delay' + i;
+            }
+        }else{
+            if (i==0){
+                element.className = 'arrowSliding';
+            } else{
+                element.className = 'arrowSliding delay' + i;
+            }
+        }
+    } 
+    var element = document.getElementById('animate');
+    
+
+}
+
+function refrescar(bono){
+
+    let myElements = document.querySelectorAll(".arrow");
+    for (let i = 0; i < myElements.length; i++) {
+        myElements[i].style.transform = `rotate(${angulo}deg)`;
+    }
+
+    arrows_direction(slide)
 
     if(bono){
         document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/bono.png?' + new Date().getTime()  alt='Card image'>";
@@ -112,7 +156,7 @@ function mostrar_dibujo(bono){
         document.getElementById('dibujo').innerHTML="<img class='card-img-top' src='./img/jirafa.png' alt='Card image'>";
     }
 
-    setTimeout(mostrar_dibujo, 1000);
+    setTimeout(refrescar, 1000);
 }
 
 

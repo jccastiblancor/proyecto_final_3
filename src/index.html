@@ -86,12 +86,30 @@
 
         <div class="card-deck">
             <div class="card" >
-                <div class="card-header"><h3> <b>Ruta 1</b> </h3></div>
+                <div class="card-header"><h3> <b>Ruta</b> </h3></div>
                 <img class="card-img-top" src="../results/navegacion.gif#" + new Date().getTime() alt="Card image">
             </div>
             <div class="card">
-                <div class="card-header"><h3> <b> Ruta 2 </b> </h3></div>
-                <img class="card-img-top" src="../results/navegacion2.gif#" + new Date().getTime() alt="Card image">
+                <div class="card-header"><h3> <b>Direccion de movimiento</b> </h3></div>
+                <div class="container">
+                <div id="arrowAnim">
+                    <div class="arrowSliding" id="flecha0" >
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="arrowSliding delay1" id="flecha1">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="arrowSliding delay2" id="flecha2">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="arrowSliding delay3" id="flecha3">
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                </div>
+                <div class="card-footer text-muted">
+                    orientacion:  <a id="orientacion"></a>
+                </div>
             </div>
         </div>    
 
