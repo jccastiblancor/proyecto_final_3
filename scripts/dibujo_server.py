@@ -51,7 +51,7 @@ class Ruta:
                 nodo = self.dar_nodo_direccion('S', nodo)
                 nodo = self.dar_nodo_direccion('E', nodo)
                 self.ruta.append(nodo)
-            nodo = self.dar_nodo_direccion('W', nodo)  # pequeño paso a la izquierda
+            nodo = self.dar_nodo_direccion('W', nodo)  # pequenio paso a la izquierda
             self.ruta.append(nodo)
             for i in range(up - 7):  # dibuja el cuerpo moviendose en diagonal abajo a la izquierda
                 nodo = self.dar_nodo_direccion('S', nodo)
