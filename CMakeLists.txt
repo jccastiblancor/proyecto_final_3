@@ -58,6 +58,7 @@ add_service_files(
     FILES
     GridmapPoints.srv
     Navegacion.srv
+    Dibujo.srv
 )
 
 ## Generate actions in the 'action' folder

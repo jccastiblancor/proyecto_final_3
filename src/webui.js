@@ -66,6 +66,12 @@ function iniciar(){
         messageType: 'std_msgs/Float32MultiArray'
     })
 
+    this.subscriptorPosicion = new ROSLIB.Topic({
+        ros: ros,
+        name: '/pioneer_position',
+        messageType: 'geometry_msgs/Twist'
+    })
+
     this.subscriptorColores = new ROSLIB.Topic({
         ros: ros,
         name: '/colores',
@@ -188,6 +194,27 @@ window.onload = function () {
         document.getElementById("verde").innerHTML=String(izquierda);
 
         
+    })
+
+    subscriptorPosicion.subscribe(function(message){
+        //console.log('Info del mensaje ruedas: \n', message.data);
+
+        orientacion = message.angular.z
+        if (orientacion <0.78 && orientacion>-0.78){
+            angulo = -135
+            slide = "slide_down"
+        } else if (orientacion >0.78 && orientacion<2.35){
+            angulo = 135
+            slide = "slide_der"
+        } else if (orientacion <-0.78 && orientacion>-2.35){
+            angulo = -45
+            slide = "slide"
+        } else {
+            angulo = 45
+            slide = "slide_up"
+        }
+
+        document.getElementById("orientacion").innerHTML=String((orientacion*180/3.14).toFixed(2));   
     })
 
     subscriptorColores.subscribe(function(message){
