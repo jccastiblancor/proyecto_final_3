@@ -305,25 +305,12 @@ class Ruta:
         relacionY = 15.0 / ancho
 
         direccion = None
+        x = []
+        y = []
 
         for nodo in self.ruta:
-            if nodo == self.inicio:
-                x = []
-                y = []
-            else:
-                if nodo[0] == anterior[0]:
-                    if direccion != 'x':
-                        x.append(anterior[0] * relacionX - 7.5)
-                        y.append(anterior[1] * relacionY - 7.5)
-                    direccion = 'x'
-                elif nodo[1] == anterior[1]:
-                    if direccion != 'y':
-                        x.append(anterior[0] * relacionX - 7.5)
-                        y.append(anterior[1] * relacionY - 7.5)
-                    direccion = 'y'
-            anterior = nodo
-        x.append(self.inicio[0] * relacionX - 7.5)
-        y.append(self.inicio[1] * relacionY - 7.5)
+            x.append(nodo[0] * relacionX - 7.5)
+            y.append(nodo[1] * relacionY - 7.5)
         print(x)
         print(y)
         return x, y
