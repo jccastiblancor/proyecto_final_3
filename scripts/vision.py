@@ -119,8 +119,6 @@ def callback_image_compressed(param):
         else:
             numeroA = DifAy
     if numeroA>1 and contoA==True:
-        vamosA = 1 + vamosA
-        time.sleep(2)
         t=0
         t2=0
         x1=0
@@ -132,6 +130,9 @@ def callback_image_compressed(param):
         contoA=False
         contador=0
         numeroA=0
+        time.sleep(2)
+        vamosA = 1 + vamosA
+        print(contoA)
             #print('Supuesto',vamosA,DifAx,DifAy)
 
 
@@ -160,8 +161,6 @@ def callback_image_compressed(param):
         else:
             numeroR = DifRy
     if numeroR>1 and contoR==True:
-        vamosR = 1 + vamosR
-        time.sleep(2)
         tR=0
         t2R=0
         x1R = 0
@@ -173,7 +172,8 @@ def callback_image_compressed(param):
         contadorR=0
         contoR=False
         numeroR=0
-
+        time.sleep(2)
+        vamosR = 1 + vamosR
 
 
     #TIEMPO CIRCULOS VERDE
@@ -199,8 +199,6 @@ def callback_image_compressed(param):
         else:
             numero=DifVy
     if numero > 1 and contoV==True:
-        vamosV = 1 + vamosV
-        time.sleep(2)
         tV=0
         t2V=0
         x1V = 0
@@ -212,13 +210,15 @@ def callback_image_compressed(param):
         contadorV=0
         contoV=False
         numero=0
-
+        time.sleep(2)
+        vamosV = 1 + vamosV
+        print(contoV)
 
     print(circulosA,circulosV,circulosR)
-    print (vamosA/2,vamosV/2,vamosR/2)
+    print (vamosA,vamosV,vamosR)
     print(DifAx,DifAy,DifVy,DifVx,DifRx,DifRy)
     pub = rospy.Publisher('/cantidad_Bolas', Float32MultiArray, queue_size=10)
-    msj.data = [vamosA/2,vamosV/2,vamosR/2]
+    msj.data = [vamosA,vamosV,vamosR]
     pub.publish(msj)
 
 
