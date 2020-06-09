@@ -114,6 +114,7 @@ def callback_image_compressed(param):
         y2=y
         DifAx = abs(x2 - x1)
         DifAy = abs(y2 - y1)
+<<<<<<< HEAD
         if DifAx > DifAy:
             numeroA = DifAx
         else:
@@ -121,6 +122,16 @@ def callback_image_compressed(param):
     if numeroA>1 and contoA==True:
         t=0
         t2=0
+=======
+    if DifAx > DifAy:
+        numeroA = DifAx
+    else:
+        numeroA = DifAy
+        
+    if numeroA > 1:
+        distanciaA=True
+        numeroA=0
+>>>>>>> master
         x1=0
         x2=0
         y2=0
@@ -128,6 +139,7 @@ def callback_image_compressed(param):
         DifAx=0
         DifAy=0
         contoA=False
+<<<<<<< HEAD
         contador=0
         numeroA=0
         time.sleep(2)
@@ -192,6 +204,10 @@ def callback_image_compressed(param):
     if contoV==True and t2V>0:
         x2V = x
         y2V = y
+=======
+
+    if distanciaV == False:
+>>>>>>> master
         DifVx = abs(x2V - x1V)
         DifVy = abs(y2V - y1V)
         if DifVx>DifVy:
@@ -207,12 +223,35 @@ def callback_image_compressed(param):
         y1V = 0
         DifVx = 0
         DifVy = 0
+<<<<<<< HEAD
         contadorV=0
         contoV=False
         numero=0
         time.sleep(2)
         vamosV = 1 + vamosV
         print(contoV)
+=======
+        contoV = False
+
+    if distanciaR==False:
+        DifRx = abs(x2R - x1R)
+        DifRy = abs(y2R - y1R)
+    if DifRx > DifRy:
+        numeroR = DifRx
+    else:
+        numeroR = DifRy
+    if numeroR > 1:
+        distanciaR = True
+        numeroR = 0
+        x1R = 0
+        y1R = 0
+        x2R = 0
+        y2R = 0
+        DifRx = 0
+        DifRy = 0
+        contoR = False
+
+>>>>>>> master
 
     print(circulosA,circulosV,circulosR)
     print (vamosA,vamosV,vamosR)
