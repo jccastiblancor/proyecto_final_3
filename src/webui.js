@@ -187,7 +187,6 @@ window.onload = function () {
     })
 
     subscriptorPosicion.subscribe(function(message){
-        //console.log('Info del mensaje ruedas: \n', message.data);
 
         orientacion = message.angular.z
         if (orientacion <0.78 && orientacion>-0.78){
@@ -209,7 +208,6 @@ window.onload = function () {
     })
 
     subscriptorColores.subscribe(function(message){
-        console.log('Info del mensaje: \n', message.data);
         rojo = message.data[2].toFixed(0)
         verde = message.data[1].toFixed(0)
         azul = message.data[0].toFixed(0)

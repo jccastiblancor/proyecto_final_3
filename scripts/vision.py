@@ -7,55 +7,27 @@ from sensor_msgs.msg import CompressedImage, Image
 import time
 from geometry_msgs.msg import Twist
 
-contar = False
-contador = 0
-t = 0
-t2 = 0
-contoA = False
-contoV = False
-contoR = False
-contarR = False
-contadorR = 0
-tR = 0
-t2R = 0
-contarV = False
-contadorV = 0
-tV = 0
-t2V = 0
 vamosA = 0
 vamosV = 0
 vamosR = 0
+
 x1 = 0
 y1 = 0
-x2 = 0
-y2 = 0
-DifAx = 0
-DifAy = 0
 x1V = 0
 y1V = 0
-x2V = 0
-y2V = 0
-DifVx = 0
-DifVy = 0
 x1R = 0
 y1R = 0
-x2R = 0
-y2R = 0
-DifRx = 0
-DifRy = 0
 x = 0
 y = 0
-numero = 0
-numeroA = 0
-numeroR = 0
+
 distanciaA = True
 distanciaV = True
 distanciaR = True
-distancia = True
 
 
 def callback_image_compressed(param):
-    global distanciaA, distanciaV, distanciaR, numeroA, numero, numeroR, x, y, contar, contador, t, t2, contarR, contadorR, tR, t2R, contarV, contadorV, tV, t2V, contoA, vamosA, vamosV, vamosR, contoR, contoV, x1, x2, y1, y2, DifAx, DifAy, x1V, x2V, y1V, y2V, DifVx, DifVy, x1R, x2R, y1R, y2R, DifRx, DifRy
+    global distanciaA, distanciaV, distanciaR, x, y, vamosA, vamosV, vamosR, x1, y1, x1V, y1V, x1R, y1R
+
     np_arr = np.fromstring(param.data, np.uint8)  # Pasar de String que viene a uint8
     msj = Float32MultiArray()
     image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # Lo pasa a RGB
@@ -106,20 +78,9 @@ def callback_image_compressed(param):
     circulosA = encontrarCentros(dilation_a)
     circulosV = encontrarCentros(dilation_v2)
     circulosR = encontrarCentros(dilation_r2)
-<<<<<<< Updated upstream
-    #TIEMPO CIRCULOS AZULES
-    if circulosA != [] and contoA ==False:
-        if distanciaA:
-            x1 = x
-            y1 = y
-            distanciaA = False
-            contoA=True
-    if circulosV != [] and contoV==False:
-        if distanciaV:
-=======
-    # TIEMPO CIRCULOS AZULES
+
     if circulosA:
-        if distanciaA and x!=0:
+        if distanciaA and x != 0:
             vamosA += 1
             x1 = x
             y1 = y
@@ -127,15 +88,12 @@ def callback_image_compressed(param):
         else:
             x2 = x
             y2 = y
-            DifAx = abs(x2 - x1)
-            DifAy = abs(y2 - y1)
-            if (DifAx ** 2 + DifAy ** 2) ** (1 / 2) > 1:
+            if (abs(x2 - x1) ** 2 + abs(y2 - y1) ** 2) ** (1 / 2) > 1:
                 distanciaA = True
 
     if circulosV:
-        if distanciaV and x!=0:
+        if distanciaV and x != 0:
             vamosV += 1
->>>>>>> Stashed changes
             x1V = x
             y1V = y
             distanciaV = False
@@ -144,100 +102,20 @@ def callback_image_compressed(param):
             y2V = y
             if (abs(x2V - x1V) ** 2 + abs(y2V - y1V) ** 2) ** (1 / 2) > 1:
                 distanciaV = True
-    if circulosR and x!=0:
+
+    if circulosR and x != 0:
         if distanciaR:
             x1R = x
             y1R = y
             distanciaR = False
-<<<<<<< Updated upstream
-            contoR=True
-    if contoA==True:
-        x2=x
-        y2=y
-    if contoR==True:
-        x2V=x
-        y2V=y
-    if contoV==True:
-        x2R=x
-        y2R=y
-    if distanciaA==False:
-        DifAx = abs(x2 - x1)
-        DifAy = abs(y2 - y1)
-    if DifAx > DifAy:
-        numeroA = DifAx
-    else:
-        numeroA = DifAy
-    if numeroA > 1:
-        vamosA += 1
-    if numeroA > 1:
-        distanciaA=True
-        numeroA=0
-        x1=0
-        y1=0
-        x2=0
-        y2=0
-        DifAx=0
-        DifAy=0
-        contoA=False
-    if distanciaV == False:
-        DifVx = abs(x2V - x1V)
-        DifVy = abs(y2V - y1V)
-    if DifVx > DifVy:
-        numeroV = DifVx
-    else:
-        numeroV = DifVy
-    if numeroV>1:
-        vamosV += 1
-    if numeroV > 1:
-        distanciaV = True
-        numeroV = 0
-        x1V = 0
-        y1V = 0
-        x2V = 0
-        y2V = 0
-        DifVx = 0
-        DifVy = 0
-        contoV = False
-    if distanciaR==False:
-        DifRx = abs(x2R - x1R)
-        DifRy = abs(y2R - y1R)
-    if DifRx > DifRy:
-        numeroR = DifRx
-    else:
-        numeroR = DifRy
-    if numeroR>1:
-        vamosR += 1
-    if numeroR > 1:
-        distanciaR = True
-        numeroR = 0
-        x1R = 0
-        y1R = 0
-        x2R = 0
-        y2R = 0
-        DifRx = 0
-        DifRy = 0
-        contoR = False
-
-
-    print(circulosA,circulosV,circulosR)
-    print (vamosA,vamosV,vamosR)
-    print(DifAx,DifAy,DifVy,DifVx,DifRx,DifRy)
-    pub = rospy.Publisher('/colores', Float32MultiArray, queue_size=10)
-    msj.data = [vamosA,vamosV,vamosR]
-=======
         else:
             x2R = x
             y2R = y
             if (abs(x2R - x1R) ** 2 + abs(y2R - y1R) ** 2) ** (1 / 2) > 1:
                 distanciaR = True
 
-    print(circulosA, circulosV, circulosR)
-    print(vamosA, vamosV, vamosR)
-    print(DifAx, DifAy, DifVy, DifVx, DifRx, DifRy)
     pub = rospy.Publisher('/colores', Float32MultiArray, queue_size=10)
     msj.data = [vamosA, vamosV, vamosR]
->>>>>>> Stashed changes
-    pub.publish(msj)
 
 
 def encontrarCentros(image):  # Esta funcion encuentra los centros de los circulos
