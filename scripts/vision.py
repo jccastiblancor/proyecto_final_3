@@ -137,6 +137,7 @@ def callback_image_compressed(param):
         numeroA = DifAx
     else:
         numeroA = DifAy
+        
     if numeroA > 1:
         distanciaA=True
         numeroA=0
@@ -147,6 +148,7 @@ def callback_image_compressed(param):
         DifAx=0
         DifAy=0
         contoA=False
+
     if distanciaV == False:
         DifVx = abs(x2V - x1V)
         DifVy = abs(y2V - y1V)
@@ -164,6 +166,7 @@ def callback_image_compressed(param):
         DifVx = 0
         DifVy = 0
         contoV = False
+
     if distanciaR==False:
         DifRx = abs(x2R - x1R)
         DifRy = abs(y2R - y1R)
