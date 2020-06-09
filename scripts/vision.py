@@ -114,6 +114,9 @@ def callback_image_compressed(param):
             if (abs(x2R - x1R) ** 2 + abs(y2R - y1R) ** 2) ** (1 / 2) > 1:
                 distanciaR = True
 
+    print(circulosA, circulosV, circulosR)
+    print(vamosA, vamosV, vamosR)
+
     pub = rospy.Publisher('/colores', Float32MultiArray, queue_size=10)
     msj.data = [vamosA, vamosV, vamosR]
 
@@ -138,8 +141,8 @@ def encontrarCentros(image):  # Esta funcion encuentra los centros de los circul
 
 def callback_pos(param):
     global x, y
-    x = (param.linear.x)
-    y = (param.linear.y)
+    x = param.linear.x
+    y = param.linear.y
 
 
 def vision_OP():

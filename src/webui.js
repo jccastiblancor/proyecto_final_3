@@ -208,6 +208,7 @@ window.onload = function () {
     })
 
     subscriptorColores.subscribe(function(message){
+        console.log(message.data)
         rojo = message.data[2].toFixed(0)
         verde = message.data[1].toFixed(0)
         azul = message.data[0].toFixed(0)
