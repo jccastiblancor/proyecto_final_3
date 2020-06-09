@@ -119,6 +119,7 @@ def callback_image_compressed(param):
 
     pub = rospy.Publisher('/colores', Float32MultiArray, queue_size=10)
     msj.data = [vamosA, vamosV, vamosR]
+    pub.publish(msj)
 
 
 def encontrarCentros(image):  # Esta funcion encuentra los centros de los circulos
