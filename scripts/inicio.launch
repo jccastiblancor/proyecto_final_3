@@ -1,8 +1,8 @@
 <launch>
   
-  
   <node pkg="proyecto_final_3" type="gridmap_points_server.py" name="gridmap_points"/>
   <node pkg="proyecto_final_3" type="navegacion_server.py" name="navegacion"/>
+  <node pkg="proyecto_final_3" type="dibujo_server.py" name="dibujo"/>
   <node pkg="proyecto_final_3" type="vision.py" name="vision"/>
   <node pkg="proyecto_final_3" type="traccion.py" name="traccion"/>
 
