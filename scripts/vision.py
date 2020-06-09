@@ -102,21 +102,18 @@ def callback_image_compressed(param):
     #TIEMPO CIRCULOS AZULES
     if circulosA != [] and contoA ==False:
         if distanciaA:
-            vamosA += 1
             x1 = x
             y1 = y
             distanciaA = False
             contoA=True
     if circulosV != [] and contoV==False:
         if distanciaV:
-            vamosV += 1
             x1V = x
             y1V = y
             distanciaV = False
             contoV=True
     if circulosR != [] and contoR==False:
         if distanciaR:
-            vamosR += 1
             x1R = x
             y1R = y
             distanciaR = False
@@ -138,6 +135,8 @@ def callback_image_compressed(param):
     else:
         numeroA = DifAy
     if numeroA > 1:
+        vamosA += 1
+    if numeroA > 1:
         distanciaA=True
         numeroA=0
         x1=0
@@ -154,6 +153,8 @@ def callback_image_compressed(param):
         numeroV = DifVx
     else:
         numeroV = DifVy
+    if numeroV>1:
+        vamosV += 1
     if numeroV > 1:
         distanciaV = True
         numeroV = 0
@@ -171,6 +172,8 @@ def callback_image_compressed(param):
         numeroR = DifRx
     else:
         numeroR = DifRy
+    if numeroR>1:
+        vamosR += 1
     if numeroR > 1:
         distanciaR = True
         numeroR = 0
@@ -186,7 +189,7 @@ def callback_image_compressed(param):
     print(circulosA,circulosV,circulosR)
     print (vamosA,vamosV,vamosR)
     print(DifAx,DifAy,DifVy,DifVx,DifRx,DifRy)
-    pub = rospy.Publisher('/cantidad_Bolas', Float32MultiArray, queue_size=10)
+    pub = rospy.Publisher('/colores', Float32MultiArray, queue_size=10)
     msj.data = [vamosA,vamosV,vamosR]
     pub.publish(msj)
 
