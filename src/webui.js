@@ -75,7 +75,7 @@ function iniciar(){
     this.subscriptorColores = new ROSLIB.Topic({
         ros: ros,
         name: '/colores',
-        // messageType: 'std_msgs/MultiArrayLayout'
+        messageType: 'std_msgs/Float32MultiArray'
     })
 
     publisher = new ROSLIB.Message({
@@ -210,9 +210,9 @@ window.onload = function () {
 
     subscriptorColores.subscribe(function(message){
         console.log('Info del mensaje: \n', message.data);
-        rojo = message.data[0]
-        verde = message.data[1]
-        azul = message.data[2]
+        rojo = message.data[2].toFixed(0)
+        verde = message.data[1].toFixed(0)
+        azul = message.data[0].toFixed(0)
 
         document.getElementById("rojo").innerHTML=String(rojo);
         document.getElementById("verde").innerHTML=String(verde);

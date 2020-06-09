@@ -7,6 +7,7 @@ from geometry_msgs.msg import Twist
 from proyecto_final_3.srv import Navegacion, GridmapPoints, Dibujo
 
 x, y, theta = 0.0, 0.0, 0.0
+rojo, azul, verde = 0, 0, 0
 
 hayRuta = False
 resp = None
@@ -145,6 +146,25 @@ def inicio(param):
 
     solicitarRuta(info[0], info[1], info[3])
 
+def bolitas(param):
+    global verde, azul, rojo
+
+    rojo = param.data[2]
+    verde = param.data[1]
+    azul = param.data[0]
+
+
+def get_figura():
+    global verde, azul, rojo
+    if rojo > verde and rojo > azul:
+        ans = 'pez'
+    elif verde > rojo and verde > azul:
+        ans = 'gato'
+    elif azul > rojo and azul > verde:
+        ans = 'pato'
+    else:
+        ans = 'jirafa'
+    return ans
 
 # PLS NO TOCAR FALTA INCORPORAR EL CAMBIO DE POSICION FINAL SEGUN LA RUTA Y CAMBIAR DE VELOCIDAD LINEAL Y ANGULAR A LAS VELOCIDADES DE CADA RUEDA
 def traccion_OP():
@@ -153,6 +173,7 @@ def traccion_OP():
     msj = Float32MultiArray()
     rospy.init_node('traccion', anonymous=True)
     rospy.Subscriber('/start', String, inicio, queue_size=1)
+    rospy.Subscriber('/colores', Float32MultiArray, bolitas, queue_size=1)
     rospy.Subscriber('/pioneer_position', Twist, callback_pos, queue_size=1)
     pub = rospy.Publisher('/pioneer_motorsVel', Float32MultiArray, queue_size=10)
     # pub = rospy.Publisher('/pioneer_cmdVel', Twist, queue_size=10)
@@ -217,7 +238,7 @@ def traccion_OP():
 
             if dibujo:
                 print('----------DIBUJO----------')
-                figura = 'pez'
+                figura = get_figura()
                 hacer_dibujo([x, y], figura)
                 dibujo = False
 
