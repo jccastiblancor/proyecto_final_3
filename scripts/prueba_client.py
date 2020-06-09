@@ -23,7 +23,7 @@ def main():
 
     dibujo = rospy.ServiceProxy('dibujo', Dibujo)
 
-    figura = "pez" # poner figura que van a dibujar
+    figura = "gato" # poner figura que van a dibujar
 
     inicio = [3.366, -4.5]
     resp = dibujo(figura, inicio)

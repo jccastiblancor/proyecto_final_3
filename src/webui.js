@@ -177,22 +177,12 @@ window.onload = function () {
     // ----------------------------    
 
     subscriptorMovimiento.subscribe(function(message){
-        //console.log('Info del mensaje ruedas: \n', message.data);
 
         derecha = message.data[1].toFixed(2)
         izquierda = message.data[0].toFixed(2)
 
-        //console.log('derecha: \n', derecha);
-        //console.log('izquierda: \n', izquierda);
-        rojo = derecha
-        verde = izquierda
-
         document.getElementById("rueda_derecha").innerHTML=String(derecha);
         document.getElementById("rueda_izquierda").innerHTML=String(izquierda);
-
-        document.getElementById("rojo").innerHTML=String(derecha);
-        document.getElementById("verde").innerHTML=String(izquierda);
-
         
     })
 
@@ -214,7 +204,8 @@ window.onload = function () {
             slide = "slide_up"
         }
 
-        document.getElementById("orientacion").innerHTML=String((orientacion*180/3.14).toFixed(2));   
+        document.getElementById("orientacion").innerHTML=String((orientacion*180/3.14).toFixed(2));
+        document.getElementById("posicion").innerHTML = `[ ${message.linear.x.toFixed(2)} m , ${message.linear.y.toFixed(2)} m ]`; 
     })
 
     subscriptorColores.subscribe(function(message){
