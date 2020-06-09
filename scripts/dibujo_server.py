@@ -352,8 +352,6 @@ class Ruta:
         for nodo in self.ruta:
             x.append(nodo[0] * relacionX - 7.5)
             y.append(nodo[1] * relacionY - 7.5)
-        print(x)
-        print(y)
         return x, y
 
     def dar_nodo_direccion(self, direccion, nodo):

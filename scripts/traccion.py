@@ -207,7 +207,7 @@ def traccion_OP():
                         else:
                             alpha = angulo - theta
 
-                        print(rho, angulo, theta, alpha, b, c)
+                        # print(rho, angulo, theta, alpha, b, c)
                         adelantar(rho, alpha)
                         rate.sleep()
 
