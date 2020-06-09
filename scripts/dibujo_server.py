@@ -59,7 +59,48 @@ class Ruta:
 
     def gato(self, derecha, izquierda, up, down, nodo):
         if (derecha + izquierda) > (up + down):  # Es ancho el espacio de dibujo
-            pass
+            for i in range(6):
+                nodo = self.dar_nodo_direccion('W', nodo)  # Se mueve del centro para arriba
+                self.ruta.append(nodo)
+            for i in range(3):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('W', nodo)  # Se mueve diagonal arriba a la punta de la cabeza
+                self.ruta.append(nodo)
+            for i in range(21):
+                nodo = self.dar_nodo_direccion('E', nodo)  # Se mueve diagonal abajo a la derecha hasta la punta del pico
+                self.ruta.append(nodo)
+            for i in range(6):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('W', nodo)  # Se mueve a la izquierda hasa el cuello
+                self.ruta.append(nodo)
+            for i in range(3):
+                nodo = self.dar_nodo_direccion('E', nodo)  # Diagonal derecha abajo para pecho
+                self.ruta.append(nodo)
+            for i in range(6):
+                nodo = self.dar_nodo_direccion('S', nodo)  # Recto hacia abajo para pecho
+                nodo = self.dar_nodo_direccion('E', nodo)
+                self.ruta.append(nodo)
+            for i in range(6):
+                nodo = self.dar_nodo_direccion('S', nodo)
+                self.ruta.append(nodo)
+            for i in range(12):
+                nodo = self.dar_nodo_direccion('W', nodo)  # Izquierda hasta llegar a la pata
+                self.ruta.append(nodo)
+            for i in range(3):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('W', nodo)  # Diagonal abajo derecha hasta casi el piso
+                self.ruta.append(nodo)
+            for i in range(3):
+                nodo = self.dar_nodo_direccion('S', nodo)
+                nodo = self.dar_nodo_direccion('W', nodo)  # Diagonal abajo derecha hasta casi el piso
+                self.ruta.append(nodo)
+            for i in range(6):
+                nodo = self.dar_nodo_direccion('W', nodo)
+                self.ruta.append(nodo)
+            for i in range(3):
+                nodo = self.dar_nodo_direccion('E',nodo)  # Izquierda hasta llegar a la parte inferior izquierda del pato.
+                nodo = self.dar_nodo_direccion('N', nodo)
+                self.ruta.append(nodo)
         else:  # es mas largo que ancho
             pass
         # TODO pintar jirafa.
