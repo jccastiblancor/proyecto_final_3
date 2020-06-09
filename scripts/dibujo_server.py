@@ -19,10 +19,43 @@ class Ruta:
 
     def jirafa(self, derecha, izquierda, up, down, nodo):
         if (derecha + izquierda) > (up + down):  # Es ancho el espacio de dibujo
-            pass
+            for i in range (up - 5):
+                nodo = self.dar_nodo_direccion('N',nodo)
+                nodo = self.dar_nodo_direccion('E',nodo)# Diagonal derecha por lomo
+                self.ruta.append(nodo)
+            for i in range (up - 6):
+                nodo = self.dar_nodo_direccion('N',nodo)# Arriba por la cola
+                self.ruta.append(nodo)
+            for i in range (up - 4):
+                nodo = self.dar_nodo_direccion('E',nodo)# Recto a la derecha hasta la pata
+                self.ruta.append(nodo)
+            for i in range (up - 4):
+                nodo = self.dar_nodo_direccion('S',nodo)
+                nodo = self.dar_nodo_direccion('W',nodo)# Diagonal izquierda para pata 1
+                self.ruta.append(nodo)
+            for i in range (up - 5):
+                nodo = self.dar_nodo_direccion('S',nodo)
+                nodo = self.dar_nodo_direccion('E',nodo)# Izquierda hasta l legar a la pata
+                self.ruta.append(nodo)
+            for i in range ((up - 1) * 2):
+                nodo = self.dar_nodo_direccion('W',nodo)# Izquiera por el cuello hasta la cabeza
+                self.ruta.append(nodo)
+            for i in range (up - 5):
+                nodo = self.dar_nodo_direccion('S',nodo)# Abajo por la boca
+                self.ruta.append(nodo)
+            for i in range (up - 5):
+                nodo = self.dar_nodo_direccion('N',nodo)
+                nodo = self.dar_nodo_direccion('W',nodo)# Diagonal izquierda arriba hasta la cabeza
+                self.ruta.append(nodo)
+            for i in range (up - 6):
+                nodo = self.dar_nodo_direccion('N',nodo)
+                nodo = self.dar_nodo_direccion('E',nodo)# Diagonal arriba derecha hasta cuello
+                self.ruta.append(nodo)
+            for i in range (up - 1):
+                nodo = self.dar_nodo_direccion('E',nodo)# Derecha hasta finalizar
+                self.ruta.append(nodo)
         else:  # es mas largo que ancho
             pass
-        # TODO pintar jirafa.
 
     def gato(self, derecha, izquierda, up, down, nodo):
         if (derecha + izquierda) > (up + down):  # Es ancho el espacio de dibujo
@@ -32,11 +65,68 @@ class Ruta:
         # TODO pintar jirafa.
 
     def pato(self, derecha, izquierda, up, down, nodo):
+        """
+        Dibuja un pato
+        """
+        print('PATO')
         if (derecha + izquierda) > (up + down):  # Es ancho el espacio de dibujo
-            pass
+            for i in range(up - 4):
+                nodo = self.dar_nodo_direccion('N', nodo)  # Se mueve del centro para arriba
+                self.ruta.append(nodo)
+            for i in range(up - 7):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('E', nodo)  # Se mueve diagonal arriba a la punta de la cabeza
+                self.ruta.append(nodo)
+            for i in range(up - 5):
+                nodo = self.dar_nodo_direccion('S', nodo)
+                nodo = self.dar_nodo_direccion('E',
+                                               nodo)  # Se mueve diagonal abajo a la derecha hasta la punta del pico
+                self.ruta.append(nodo)
+            for i in range(up - 6):
+                nodo = self.dar_nodo_direccion('W', nodo)  # Se mueve a la izquierda hasa el cuello
+                self.ruta.append(nodo)
+            for i in range(up - 8):
+                nodo = self.dar_nodo_direccion('S', nodo)
+                nodo = self.dar_nodo_direccion('E', nodo)  # Diagonal derecha abajo para pecho
+                self.ruta.append(nodo)
+            for i in range(up - 6):
+                nodo = self.dar_nodo_direccion('S', nodo)  # Recto hacia abajo para pecho
+                self.ruta.append(nodo)
+            for i in range(up - 7):
+                nodo = self.dar_nodo_direccion('S', nodo)
+                nodo = self.dar_nodo_direccion('W', nodo)  # Diagonal izquierda para pecho
+                self.ruta.append(nodo)
+            for i in range(up - 6):
+                nodo = self.dar_nodo_direccion('W', nodo)  # Izquierda hasta llegar a la pata
+                self.ruta.append(nodo)
+            for i in range(up - 7):
+                nodo = self.dar_nodo_direccion('S', nodo)
+                nodo = self.dar_nodo_direccion('E', nodo)  # Diagonal abajo derecha hasta casi el piso
+                self.ruta.append(nodo)
+            for i in range(up - 5):
+                nodo = self.dar_nodo_direccion('W', nodo)  # Izquierda en la pata
+                self.ruta.append(nodo)
+            for i in range(up - 7):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('E', nodo)  # Diagonal derecha arriba para la pata
+                self.ruta.append(nodo)
+            for i in range(up - 5):
+                nodo = self.dar_nodo_direccion('W',
+                                               nodo)  # Izquierda hasta llegar a la parte inferior izquierda del pato.
+                self.ruta.append(nodo)
+            for i in range(up - 8):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('E', nodo)  # Diagonal arriba derecha
+                self.ruta.append(nodo)
+            for i in range(up - 5):
+                nodo = self.dar_nodo_direccion('N', nodo)
+                nodo = self.dar_nodo_direccion('W', nodo)  # Diagonal izquierda arriba hasta la cola
+                self.ruta.append(nodo)
+            for i in range(up - 1):
+                nodo = self.dar_nodo_direccion('E', nodo)  # Derecha todo el lomo
+                self.ruta.append(nodo)
         else:  # es mas largo que ancho
             pass
-        # TODO pintar jirafa.
 
     def pez(self, derecha, izquierda, up, down, nodo):
         """
@@ -234,8 +324,8 @@ class Ruta:
             anterior = nodo
         x.append(self.inicio[0] * relacionX - 7.5)
         y.append(self.inicio[1] * relacionY - 7.5)
-        x.reverse()
-        y.reverse()
+        print(x)
+        print(y)
         return x, y
 
     def dar_nodo_direccion(self, direccion, nodo):

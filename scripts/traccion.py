@@ -174,11 +174,17 @@ def traccion_OP():
                     while (alpha > 0.05 or alpha < - 0.05) and not rospy.is_shutdown():
                         error = [xf - x, yf - y]
                         angulo = np.arctan2(error[1], error[0])
-                        if angulo > 2.5 or angulo < -2.5:
-                            alpha = abs(angulo) * np.sign(theta) - theta
+                        # if angulo > 2.5 or angulo < -2.5:
+                            # alpha = abs(angulo) * np.sign(theta) - theta
+                        if angulo > 2.8 or angulo < -2.8:
+                            b = np.pi - abs(angulo)
+                            b = b * np.sign(angulo)
+                            c = np.pi - abs(theta)
+                            c = c * np.sign(theta)
+                            alpha = c-b
                         else:
                             alpha = angulo - theta
-                        print(alpha, angulo, theta)
+                        # print(alpha, angulo, theta)
                         girar(alpha)
                         rate.sleep()
 
@@ -191,19 +197,17 @@ def traccion_OP():
                     while (rho > 0.04) and not rospy.is_shutdown():
                         error = [xf - x, yf - y]
                         angulo = np.arctan2(error[1], error[0])
-                        if angulo > 2.8 or angulo < -2.8:
-                            """
-                            if angulo < 3.1:
-                                angulo = 3.1
-                            if angulo < -3.1:
-                                angulo = -3.1
-                            alpha = abs(angulo) * np.sign(theta) - theta
-                            """
-                            angulo = np.arctan2(-error[0], error[1])
-                            theta = theta + 90 # TODO falta probar esto
-                        alpha = angulo - theta
                         rho = np.sqrt(np.power(error[0], 2) + np.power(error[1], 2))
-                        print(rho, alpha, theta)
+                        if angulo > 2.8 or angulo < -2.8:
+                            b = np.pi - abs(angulo)
+                            b = b * np.sign(angulo)
+                            c = np.pi - abs(theta)
+                            c = c * np.sign(theta)
+                            alpha = c-b
+                        else:
+                            alpha = angulo - theta
+
+                        print(rho, angulo, theta, alpha, b, c)
                         adelantar(rho, alpha)
                         rate.sleep()
 
@@ -212,11 +216,13 @@ def traccion_OP():
             hayRuta = False
 
             if dibujo:
+                print('----------DIBUJO----------')
                 figura = 'pez'
                 hacer_dibujo([x, y], figura)
                 dibujo = False
 
             if pintar:
+                print('----------A PINTAR----------')
                 solicitarRuta([x, y], pintar)
                 pintar = False
                 dibujo = True
